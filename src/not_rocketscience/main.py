@@ -28,10 +28,13 @@ class NotRocketScience(GameBase):
         self.angle = 0
         self.thrust = 0
 
+        self.planet_pos = np.array((900, 200))
+        self.planet_color = (200, 170, 0, 255)
+
         self.pos = 0.5 * np.array(self.screen_size)
         self.accel = np.array([0, 0])
         self.speed = np.array([0, 0])
-        self.damp = 0.25
+        self.damp = 0.01
         # self.poss = [0.5 * np.array(self.screen_size) for _ in self.star_bg.surfaces]
 
     def fire_color(self):
@@ -49,15 +52,21 @@ class NotRocketScience(GameBase):
             np.array([0, -self.thrust])
         )
 
+        diff = self.planet_pos - self.pos
+        grav = 100 * diff / np.sqrt(np.sum(diff**2))
+        self.accel = 0.5 * (self.accel + grav)
+
         self.speed = self.speed + self.frametime_s * (self.accel - self.speed * self.damp)
         self.screen.fill((0, 0, 0, 255))
         self.star_background.blit(self.screen, self.frametime_s, self.speed)
 
+        self.planet_pos = self.planet_pos - self.frametime_s * self.speed
         
         # self.logger.debug(f"angle: {self.angle}")
         pygame.draw.rect(self.ship_layer, self.fire_color(), (45, 75, 10, 15))
         rotated_ship = pygame.transform.rotate(self.ship_layer, self.angle)
         pos = rotated_ship.get_rect(center=tuple(0.5 * np.array(self.screen_size)))
+        pygame.draw.ellipse(self.screen, self.planet_color , tuple(self.planet_pos) + (50, 50))
         self.screen.blit(rotated_ship, pos)
 
     def process_inputs(self):
