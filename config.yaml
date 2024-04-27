@@ -1,3 +1,15 @@
+screen_size:
+  - 800
+  - 600
+
+background:
+  number_of_layers: 3
+  space_color: "#131424"
+  star_color: "#fffac9"
+
+
+
+
 logging:
   # standard logging configuration
   version: 1
@@ -6,7 +18,7 @@ logging:
     default: 
       format: '%(asctime)s %(levelname)s %(name)s - %(message)s'
     short:
-      format: '%(levelname)s %(message)s'
+      format: '%(levelname)s %(name)s %(message)s'
   handlers: 
     stream:
       level: DEBUG
