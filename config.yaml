@@ -1,0 +1,26 @@
+logging:
+  # standard logging configuration
+  version: 1
+  disable_existing_loggers: True
+  formatters:
+    default: 
+      format: '%(asctime)s %(levelname)s %(name)s - %(message)s'
+    short:
+      format: '%(levelname)s %(message)s'
+  handlers: 
+    stream:
+      level: DEBUG
+      formatter: short
+      class: logging.StreamHandler
+      stream: ext://sys.stdout
+    file:
+      level: DEBUG
+      formatter: default
+      class: logging.FileHandler
+      filename: ./output.log
+      mode: w
+  loggers:
+    root:
+      level: DEBUG
+      handlers: 
+        - stream
