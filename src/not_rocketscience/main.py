@@ -34,7 +34,7 @@ class NotRocketScience(GameBase):
         self.pos = 0.5 * np.array(self.screen_size)
         self.accel = np.array([0, 0])
         self.speed = np.array([0, 0])
-        self.damp = 0.01
+        self.damp = 0.2
         # self.poss = [0.5 * np.array(self.screen_size) for _ in self.star_bg.surfaces]
 
     def fire_color(self):
@@ -52,9 +52,11 @@ class NotRocketScience(GameBase):
             np.array([0, -self.thrust])
         )
 
-        diff = self.planet_pos - self.pos
-        grav = 100 * diff / np.sqrt(np.sum(diff**2))
-        self.accel = 0.5 * (self.accel + grav)
+        # diff = 0.01 * (self.planet_pos - self.pos)
+        # grav = 100 * diff / np.sqrt(np.sum(diff**2))**3
+        # self.accel = self.accel + grav
+
+        # self.logger.debug(grav)
 
         self.speed = self.speed + self.frametime_s * (self.accel - self.speed * self.damp)
         self.screen.fill((0, 0, 0, 255))
