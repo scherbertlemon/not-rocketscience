@@ -31,7 +31,7 @@ class NotRocketScience(GameBase):
         
         # self.planets = [Planet(np.array((900, 200)))]
 
-        self.n_planets = 50
+        self.n_planets = config.number_of_planets
         self.planet_initial_positions = np.hstack((
             np.random.randint(-10 * self.screen_size[0] / 2, 10 * self.screen_size[0] / 2, size=(self.n_planets, 1)),
             np.random.randint(-10 * self.screen_size[1] / 2, 10 * self.screen_size[1] / 2, size=(self.n_planets, 1))
@@ -41,7 +41,7 @@ class NotRocketScience(GameBase):
         self.pos = 0.5 * np.array(self.screen_size)
         self.coordinates = self.pos
         self.speed = np.array([0, 0])
-        self.damp = 0.2
+        self.damp = config.movement_damping
 
     @property
     def screen_coordinates(self):

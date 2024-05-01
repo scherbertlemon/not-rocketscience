@@ -8,12 +8,14 @@ background:
 ship_thrust: 400  # pixels per second per second
 ship_rotation_increment: 5  # degrees per frame
 
-movement_damping: 0.2
+movement_damping: 0.1
 
 space_color: "#131424"
 star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
+
+number_of_planets: 20
 
 
 logging:
