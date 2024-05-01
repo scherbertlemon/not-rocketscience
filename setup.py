@@ -11,12 +11,16 @@ def parse_requirements():
 
 setup(
     name="not-rocketscience",
-    version="0.1.0",
+    version="0.2.0",
     description="A spaceship-flying game based on pygame",
     author="Andreas Roth",
     author_email="kommentare@s-lemon.de",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     install_requires=parse_requirements(),
-    package_data={"not_rocketscience": ["*.png"]}
+    package_data={"not_rocketscience": ["*.png"]},
+    entry_points={
+        "console_scripts": ["not-rocketscience = not_rocketscience.main:cli"]
+    }
+        
 )

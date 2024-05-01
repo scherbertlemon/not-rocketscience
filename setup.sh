@@ -3,14 +3,13 @@
 set -e
 
 here=$(cd $(dirname $0);pwd)
-env_dir=$here/_venv
+env_name=not-rocketscience
 
-if [ ! -d "${env_dir}" ]
+if [ -z "$(conda info --envs | grep ${env_name})" ]
 then
-    echo "Creating environment at ${env_dir}"
-    conda create -p $env_dir --file $here/requirements.txt -c conda-forge --yes
-    conda run -p $env_dir pip install -e $here
+    echo "Creating environment ${env_name}"
+    conda create -n $env_name --file $here/requirements.txt -c conda-forge --yes
+    conda run -n $env_name pip install -e $here
 else
-    echo "environment exists."
+    echo "Environment ${env_name} exists already."
 fi
-

@@ -69,3 +69,8 @@ class NotRocketScience(GameBase):
 
     def process_inputs(self):
         self.ship.controls()
+
+
+def cli():
+    game = NotRocketScience()
+    game.gameloop()
