@@ -7,6 +7,7 @@ class ScrollingStars:
 
     def __init__(self,
                  size: tuple,
+                 screen_size: tuple,
                  initial_position: np.array,
                  spacecolor=(10, 10, 30, 255),
                  starcolor=(255, 255, 200, 255),
@@ -16,6 +17,7 @@ class ScrollingStars:
         
         self.logger = logging.getLogger("ScrollingStars")
         self.size = size
+        self.screen_size = screen_size
         self.space_color = spacecolor
         self.star_color = starcolor
         self.n_layers = n_layers
@@ -61,7 +63,7 @@ class ScrollingStars:
 
     def blit(self, screen, dt=0, speed=np.zeros((1,2))):
         for i, surf in enumerate(self.surfaces):
-            self.layer_positions[i] -= dt * (i + 1) / self.n_layers * speed
+            self.layer_positions[i] -= dt * (i + 1) / (self.n_layers + 1) * speed
             rect = surf.get_rect(center=tuple(self.layer_positions[i]))
             pos = self.layer_positions[i] - 0.5 * np.array((rect.width, rect.height))
             screen.blit(surf, rect)

@@ -4,10 +4,16 @@ screen_size:
 
 background:
   number_of_layers: 3
-  space_color: "#131424"
-  star_color: "#fffac9"
 
+ship_thrust: 400  # pixels per second per second
+ship_rotation_increment: 5  # degrees per frame
 
+movement_damping: 0.2
+
+space_color: "#131424"
+star_color: "#fffac9"
+ship_color: "#ff0000"
+fire_color: "#ffc864"
 
 
 logging:

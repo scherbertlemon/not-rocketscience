@@ -4,6 +4,11 @@ import numpy as np
 from .framework import GameBase
 from .config import config
 from .background import ScrollingStars
+from .ship import Ship
+from .objects import Planet, FloatText
+
+
+
 
 
 class NotRocketScience(GameBase):
@@ -13,74 +18,54 @@ class NotRocketScience(GameBase):
         
         self.star_background = ScrollingStars(
             tuple(5 * dim for dim in self.screen_size),
+            self.screen_size,
             0.5 * np.array(self.screen_size),
             n_stars=1000,
-            spacecolor=config.hex_to_rgb(config.background["space_color"]),
-            starcolor=config.hex_to_rgb(config.background["star_color"]),
+            spacecolor=config.hex_to_rgb(config.space_color),
+            starcolor=config.hex_to_rgb(config.star_color),
             n_layers=4
         )
+        
+        self.txt = FloatText()
+        self.ship = Ship()
+        
+        # self.planets = [Planet(np.array((900, 200)))]
 
-        self.ship_layer = pygame.Surface((100, 100)).convert_alpha()
-        self.ship_layer.fill((0, 0, 0, 0))
-        self.ship = pygame.draw.rect(self.ship_layer, (255, 0, 0, 255), (40, 25, 20, 50))
-        self.screen.fill(config.hex_to_rgb(config.background["space_color"]))
-        self.rotation = 0
-        self.angle = 0
-        self.thrust = 0
-
-        self.planet_pos = np.array((900, 200))
-        self.planet_color = (200, 170, 0, 255)
+        self.n_planets = 50
+        self.planet_initial_positions = np.hstack((
+            np.random.randint(-10 * self.screen_size[0] / 2, 10 * self.screen_size[0] / 2, size=(self.n_planets, 1)),
+            np.random.randint(-10 * self.screen_size[1] / 2, 10 * self.screen_size[1] / 2, size=(self.n_planets, 1))
+        ))
+        self.planets = [Planet(pos) for pos in self.planet_initial_positions]
 
         self.pos = 0.5 * np.array(self.screen_size)
-        self.accel = np.array([0, 0])
+        self.coordinates = self.pos
         self.speed = np.array([0, 0])
         self.damp = 0.2
-        # self.poss = [0.5 * np.array(self.screen_size) for _ in self.star_bg.surfaces]
 
-    def fire_color(self):
-        return 255, 200, 100, 200 if self.thrust else 0
+    @property
+    def screen_coordinates(self):
+        self.coordinates = self.coordinates + self.frametime_s * self.speed
+        return tuple(int(c / s) for c, s in zip(self.coordinates, self.screen_size))
     
     def render_scene(self):
-        
-        self.angle += self.rotation
-        angle_rad = self.angle / 180 * np.pi
-        self.accel = np.matmul(
-            np.array([
-                [np.cos(angle_rad), np.sin(angle_rad)],
-                [-np.sin(angle_rad), np.cos(angle_rad)]
-            ]),
-            np.array([0, -self.thrust])
+        self.ship.apply_rotation()
+
+        gravs = np.vstack([p.calc_gravity(self.pos) for p in self.planets])
+        grav_accel = np.sum(gravs, axis=0)
+
+        self.speed = self.speed + self.frametime_s * (self.ship.calc_acceleration() - grav_accel - self.speed * self.damp)
+        # self.logger.debug(self.screen_coordinates)
+
+        self.star_background.blit(self.screen, self.frametime_s, self.speed)
+        [p.update_position_and_draw(self.screen, self.frametime_s, self.speed) for p in self.planets]
+        self.ship.draw(self.screen, self.pos)
+
+        self.txt.render(
+            self.screen,
+            (self.screen_width / 2, 0),
+            f"coordinates: ({self.coordinates[0]:5.0f},{self.coordinates[1]:5.0f}) screen_coordinates: {self.screen_coordinates} speed: ({self.speed[0]:5.0f},{self.speed[1]:5.0f})"
         )
 
-        # diff = 0.01 * (self.planet_pos - self.pos)
-        # grav = 100 * diff / np.sqrt(np.sum(diff**2))**3
-        # self.accel = self.accel + grav
-
-        # self.logger.debug(grav)
-
-        self.speed = self.speed + self.frametime_s * (self.accel - self.speed * self.damp)
-        self.screen.fill((0, 0, 0, 255))
-        self.star_background.blit(self.screen, self.frametime_s, self.speed)
-
-        self.planet_pos = self.planet_pos - self.frametime_s * self.speed
-        
-        # self.logger.debug(f"angle: {self.angle}")
-        pygame.draw.rect(self.ship_layer, self.fire_color(), (45, 75, 10, 15))
-        rotated_ship = pygame.transform.rotate(self.ship_layer, self.angle)
-        pos = rotated_ship.get_rect(center=tuple(0.5 * np.array(self.screen_size)))
-        pygame.draw.ellipse(self.screen, self.planet_color , tuple(self.planet_pos) + (50, 50))
-        self.screen.blit(rotated_ship, pos)
-
     def process_inputs(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.rotation = 5
-        elif keys[pygame.K_RIGHT]:
-            self.rotation = -5
-        else:
-            self.rotation = 0
-
-        if keys[pygame.K_SPACE]:
-            self.thrust = 200
-        else:
-            self.thrust = 0
+        self.ship.controls()
