@@ -11,10 +11,10 @@ class Stars(GameBase):
         self.star_bg = ScrollingStars(
             tuple(5 * dim for dim in self.screen_size),
             0.5 * np.array(self.screen_size),
-            n_stars=1000,
-            spacecolor=config.hex_to_rgb(config.background["space_color"]),
-            starcolor=config.hex_to_rgb(config.background["star_color"]),
-            n_layers=4
+            n_stars=config.background_number_of_stars,
+            spacecolor=config.hex_to_rgb(config.space_color),
+            starcolor=config.hex_to_rgb(config.star_color),
+            n_layers=config.background_number_of_layers
         )
         
         self.pos = 0.5 * np.array(self.screen_size)

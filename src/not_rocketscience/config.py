@@ -37,6 +37,10 @@ class Configuration:
         if not re.match("[0-9a-f]{6}", v):
             raise ValueError(f"not a color code: {v}")
         return tuple(int(v[2 * i:2 * i + 2], 16) for i in range(0, 3))
+    
+    @staticmethod
+    def rgb_to_hex(rgb: tuple):
+        return "#" + "".join(f"{c:x}" for c in rgb)
 
     def init_logging(self):
         if not self.logging_initialized:

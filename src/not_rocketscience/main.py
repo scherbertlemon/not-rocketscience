@@ -20,13 +20,13 @@ class NotRocketScience(GameBase):
             tuple(5 * dim for dim in self.screen_size),
             self.screen_size,
             0.5 * np.array(self.screen_size),
-            n_stars=1000,
+            n_stars=config.background_number_of_stars,
             spacecolor=config.hex_to_rgb(config.space_color),
             starcolor=config.hex_to_rgb(config.star_color),
-            n_layers=4
+            n_layers=config.background_number_of_layers
         )
         
-        self.txt = FloatText()
+        self.txt = FloatText(fontsize=12)
         self.ship = Ship()
         
         # self.planets = [Planet(np.array((900, 200)))]
@@ -51,8 +51,9 @@ class NotRocketScience(GameBase):
     def render_scene(self):
         self.ship.apply_rotation()
 
-        gravs = np.vstack([p.calc_gravity(self.pos) for p in self.planets])
-        grav_accel = np.sum(gravs, axis=0)
+        planets_in_block = [p for p in self.planets if np.abs(self.pos - p.pos).sum() < self.screen_height + self.screen_width]
+        gravity_contrib = [p.calc_gravity(self.pos) for p in planets_in_block] if planets_in_block else [np.zeros(2)]        
+        grav_accel= np.vstack(gravity_contrib).sum(axis=0)
 
         self.speed = self.speed + self.frametime_s * (self.ship.calc_acceleration() - grav_accel - self.speed * self.damp)
         # self.logger.debug(self.screen_coordinates)
@@ -64,7 +65,12 @@ class NotRocketScience(GameBase):
         self.txt.render(
             self.screen,
             (self.screen_width / 2, 0),
-            f"coordinates: ({self.coordinates[0]:5.0f},{self.coordinates[1]:5.0f}) screen_coordinates: {self.screen_coordinates} speed: ({self.speed[0]:5.0f},{self.speed[1]:5.0f})"
+            (
+                f"coordinates: ({self.coordinates[0]:5.0f},{self.coordinates[1]:5.0f}) "
+                f"screen_coordinates: {self.screen_coordinates} "
+                f"speed: ({self.speed[0]:5.0f},{self.speed[1]:5.0f}) "
+                f"feeling pull from planets: {len(planets_in_block)}"
+            )
         )
 
     def process_inputs(self):

@@ -2,8 +2,8 @@ screen_size:
   - 800
   - 600
 
-background:
-  number_of_layers: 3
+background_number_of_layers: 3
+background_number_of_stars: 1000
 
 ship_thrust: 400  # pixels per second per second
 ship_rotation_increment: 5  # degrees per frame
