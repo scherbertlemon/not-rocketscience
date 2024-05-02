@@ -1,3 +1,5 @@
+![logo](src/not_rocketscience/assets/logo.png)
+
 # This game is Not Rocketscience!
 
 This started out as a [pygame](https://github.com/pygame/pygame) playground and turns into a 2D spaceship-flying game.
@@ -8,7 +10,14 @@ The standard setup relies on [conda](https://docs.anaconda.com/free/miniconda/in
 
 * creates a named conda environment ``not-rocketscience``
 * installs dependencies from ``requirements.txt`` into it
-* does a editable install of the package ``src/not_rocketscience``, so it can be imported in the ``_venv``environment
+* does a editable install of the package ``src/not_rocketscience``, so it can be imported in the ``not-rocketscience`` environment
+
+You can also do those steps manually:
+
+```bash
+conda create -n not-rocketscience --file requirements.txt -c conda-forge -y
+conda run -n not-rocketscience pip install -e .
+```
 
 ## Running the game
 
