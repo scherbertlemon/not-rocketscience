@@ -42,7 +42,7 @@ class Planet:
 
         # self.scale = 300
         self.pos = position
-        self.color = tuple(np.random.randint(low=0, high=255, size=3))
+        self.color = (np.random.randint(low=150, high=255), np.random.randint(low=50, high=220)) + (0,)
         self.surface = pygame.Surface((50, 50)).convert_alpha()
         self.surface.fill((0, 0, 0, 0))
         pygame.draw.ellipse(self.surface, self.color + (100,), (0, 0, 50, 50))

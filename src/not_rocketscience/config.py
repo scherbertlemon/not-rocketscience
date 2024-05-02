@@ -1,7 +1,7 @@
 from logging.config import dictConfig
-import yaml
 from pathlib import Path
 import re
+import yaml
 
 
 class Configuration:
@@ -9,6 +9,10 @@ class Configuration:
     def __init__(self):
         self._dict_from_yaml = None
         self.logging_initialized = False
+    
+    @property
+    def asset_path(self):
+        return Path(__file__).parent / "assets"
     
     @property
     def dict_from_yaml(self):

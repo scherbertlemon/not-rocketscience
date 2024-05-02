@@ -14,7 +14,7 @@ from .objects import Planet, FloatText
 class NotRocketScience(GameBase):
 
     def __init__(self):
-        super().__init__(config.convert_tuple(config.screen_size))
+        super().__init__(config.convert_tuple(config.screen_size), fps=config.fps)
         
         self.star_background = ScrollingStars(
             tuple(5 * dim for dim in self.screen_size),

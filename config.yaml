@@ -2,6 +2,8 @@ screen_size:
   - 800
   - 600
 
+fps: 72
+
 background_number_of_layers: 3
 background_number_of_stars: 1000
 
@@ -15,7 +17,7 @@ star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
 
-number_of_planets: 20
+number_of_planets: 50
 
 
 logging:
