@@ -3,7 +3,7 @@ import numpy as np
 
 from .framework import GameBase
 from .config import config
-from .background import ScrollingStars
+from .background import LayeredScrollingStarBackground
 from .ship import Ship
 from .objects import Planet, FloatText
 
@@ -16,9 +16,8 @@ class NotRocketScience(GameBase):
     def __init__(self):
         super().__init__(config.convert_tuple(config.screen_size), fps=config.fps)
         
-        self.star_background = ScrollingStars(
-            tuple(5 * dim for dim in self.screen_size),
-            self.screen_size,
+        self.star_background = LayeredScrollingStarBackground(
+            tuple(dim * 2 for dim in self.screen_size),
             0.5 * np.array(self.screen_size),
             n_stars=config.background_number_of_stars,
             spacecolor=config.hex_to_rgb(config.space_color),
@@ -58,7 +57,7 @@ class NotRocketScience(GameBase):
         self.speed = self.speed + self.frametime_s * (self.ship.calc_acceleration() - grav_accel - self.speed * self.damp)
         # self.logger.debug(self.screen_coordinates)
 
-        self.star_background.blit(self.screen, self.frametime_s, self.speed)
+        self.star_background.draw_tiles(self.screen, self.pos, self.frametime_s, self.speed)
         [p.update_position_and_draw(self.screen, self.frametime_s, self.speed) for p in self.planets]
         self.ship.draw(self.screen, self.pos)
 

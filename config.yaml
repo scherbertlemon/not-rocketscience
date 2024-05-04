@@ -1,11 +1,11 @@
 screen_size:
-  - 1000
+  - 1200
   - 700
 
 fps: 72
 
-background_number_of_layers: 3
-background_number_of_stars: 1000
+background_number_of_layers: 4
+background_number_of_stars: 80
 
 ship_thrust: 400  # pixels per second per second
 ship_rotation_increment: 5  # degrees per frame
@@ -45,6 +45,6 @@ logging:
       mode: w
   loggers:
     root:
-      level: INFO
+      level: DEBUG
       handlers: 
         - stream
