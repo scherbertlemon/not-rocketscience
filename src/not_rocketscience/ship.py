@@ -9,21 +9,24 @@ class Ship:
         # self.layer = pygame.Surface((100, 100)).convert_alpha()
         # self.layer.fill((0, 0, 0, 0))
         # self.ship = pygame.draw.rect(self.layer, (255, 0, 0, 255), (40, 25, 20, 50))
-        self.sprites = [pygame.image.load(config.asset_path / f"ship{i}.png") for i in range(1, 3)]
+        self.sprites = [pygame.image.load(config.asset_path / f"ship{i}.png") for i in range(5, 9)]
         self.angle = 0
         self.thrust = 0
         self.rotation = 0
+        self.last_time = pygame.time.get_ticks()
+        self.sprite_index = 0
 
     @property
     def angle_rad(self):
         return self.angle / 180 * np.pi
     
-    # @property
-    # def fire_color(self):
-    #     return config.hex_to_rgb(config.fire_color) + (200 if self.thrust else 0,)
     @property
     def layer(self):
-        return self.sprites[int(bool(self.thrust))]
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_time >= 1000:
+            self.last_time = current_time
+            self.sprite_index = (self.sprite_index + 1) % 2
+        return self.sprites[self.sprite_index + 2 * int(bool(self.thrust))]
     
     def apply_rotation(self):
         self.angle += self.rotation
