@@ -1,6 +1,6 @@
 screen_size:
-  - 800
-  - 600
+  - 1000
+  - 700
 
 fps: 72
 
@@ -17,7 +17,7 @@ star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
 
-number_of_planets: 50
+number_of_planets: 25
 
 
 logging:
@@ -28,11 +28,13 @@ logging:
     default: 
       format: '%(asctime)s %(levelname)s %(name)s - %(message)s'
     short:
-      format: '%(levelname)s %(name)s %(message)s'
+      format: '%(levelname)s %(name)s - %(message)s'
+    brief:
+      format: '%(message)s'
   handlers: 
     stream:
       level: DEBUG
-      formatter: short
+      formatter: brief
       class: logging.StreamHandler
       stream: ext://sys.stdout
     file:
@@ -43,6 +45,6 @@ logging:
       mode: w
   loggers:
     root:
-      level: DEBUG
+      level: INFO
       handlers: 
         - stream
