@@ -1,7 +1,6 @@
 import logging
 import pygame
 import numpy as np
-from pprint import pformat
 
 
 class ScrollingStarBackground:
@@ -35,6 +34,8 @@ class ScrollingStarBackground:
 
                 if self.fill_background:
                     tile.fill(self.spacecolor)
+                else:
+                    tile.fill(self.spacecolor[:3] + (0,))
                 
                 self._tiles[tile_id] = self.add_stars(tile)
         
@@ -94,6 +95,45 @@ class ScrollingStarBackground:
             self.positions[tile_id] -= dt * speed
             screen.blit(tile, tile.get_rect(center=self.positions[tile_id]))
 
+
+class LayeredScrollingStarBackrgound:
+
+    def __init__(self,
+                 tile_size: tuple,
+                 initial_position: np.array,
+                 spacecolor=(10, 10, 30, 255),
+                 starcolor=(255, 255, 200, 255),
+                 n_stars=10,
+                 n_layers=3):
+        self.logger = logging.getLogger("LayeredScrollingStarBackrgound")
+        self.layers = []
+        self.n_layers = n_layers
+
+        for index, scale_mod in enumerate(self.scale_modifiers):
+            self.logger.info(f"Create background layer with factor {scale_mod} increased tile size {tile_size}")
+            self.layers.append(
+                ScrollingStarBackground(
+                    tuple(dim * scale_mod for dim in tile_size),
+                    initial_position,
+                    spacecolor=spacecolor,
+                    starcolor=starcolor,
+                    n_stars=n_stars,
+                    star_size=2 + 2 * index,
+                    fill_background=(index == 0)
+                )
+            )
+        
+    @property
+    def speed_modifiers(self):
+        return [(i + 1) / (self.n_layers + 1)  for i in range(0, self.n_layers)]
+    
+    @property
+    def scale_modifiers(self):
+        return [1.0 + i * .1 for i in range(0, self.n_layers)]
+    
+    def draw_tiles(self, screen, ship_position, dt, speed):
+        for layer, speed_mod in zip(self.layers, self.speed_modifiers):
+            layer.draw_tiles(screen, ship_position, dt, speed * speed_mod)
 
 
 class ScrollingStars:

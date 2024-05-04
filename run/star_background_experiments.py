@@ -1,4 +1,4 @@
-from not_rocketscience import GameBase, config, ScrollingStarBackground
+from not_rocketscience import GameBase, config, ScrollingStarBackground, LayeredScrollingStarBackrgound
 import numpy as np
 import pygame
 
@@ -8,12 +8,20 @@ class Stars(GameBase):
     def __init__(self):
         super().__init__(config.convert_tuple(config.screen_size), fps=60)
         
-        self.star_bg = ScrollingStarBackground(
+        # self.star_bg = ScrollingStarBackground(
+        #     (100, 100),
+        #     0.5 * np.array(self.screen_size),
+        #     n_stars=10,
+        #     spacecolor=config.hex_to_rgb(config.space_color),
+        #     starcolor=config.hex_to_rgb(config.star_color),
+        # )
+        self.star_bg = LayeredScrollingStarBackrgound(
             (100, 100),
             0.5 * np.array(self.screen_size),
             n_stars=10,
             spacecolor=config.hex_to_rgb(config.space_color),
             starcolor=config.hex_to_rgb(config.star_color),
+            n_layers=4
         )
         
         self.pos = 0.5 * np.array(self.screen_size)
