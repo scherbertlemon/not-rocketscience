@@ -17,7 +17,7 @@ star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
 
-number_of_planets: 25
+number_of_planets: 100
 
 
 logging:
@@ -45,6 +45,6 @@ logging:
       mode: w
   loggers:
     root:
-      level: DEBUG
+      level: INFO
       handlers: 
         - stream
