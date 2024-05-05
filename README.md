@@ -34,7 +34,7 @@ not-rocketscience
 
 ## Controls
 
-* Apply constant thrust by pressing and holding space
+* Apply constant thrust by pressing and holding the ``X`` key
 * Change orientation of spaceship with the left and right arrow keys
 
 That's about all you can do :-D

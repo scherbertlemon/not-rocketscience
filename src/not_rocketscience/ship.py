@@ -54,7 +54,7 @@ class Ship:
         else:
             self.rotation = 0
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_x]:
             self.thrust = config.ship_thrust
         else:
             self.thrust = 0
