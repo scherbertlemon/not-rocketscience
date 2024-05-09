@@ -5,7 +5,7 @@ screen_size:
 fps: 72
 
 background_number_of_layers: 4
-background_number_of_stars: 80
+background_number_of_stars: 120
 
 ship_thrust: 400  # pixels per second per second
 ship_rotation_increment: 5  # degrees per frame
@@ -17,7 +17,7 @@ star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
 
-number_of_planets: 100
+number_of_planets: 50
 
 
 logging:
@@ -45,6 +45,6 @@ logging:
       mode: w
   loggers:
     root:
-      level: INFO
+      level: DEBUG
       handlers: 
         - stream
