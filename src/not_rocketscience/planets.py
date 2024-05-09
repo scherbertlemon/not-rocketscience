@@ -8,25 +8,32 @@ from scipy.spatial import KDTree
 
 class PlanetGroup:
 
-    def __init__(self, coordinates, radius_min=20, radius_max=180):
+    def __init__(self, planet_class, coordinates, diameter_min=20, diameter_max=180):
         self.planets = [
-            Planet(pos, radius=np.random.randint(radius_min, radius_max))
+            planet_class(pos, diameter=np.random.randint(diameter_min, diameter_max))
             for pos in coordinates
         ]
         self.tree = KDTree(coordinates)
 
-    def nearest_neighbour_distances(self, coordinate, max_dist):
-        diffs_norms, planet_indices = self.tree.query(coordinate, len(self.planets), distance_upper_bound=max_dist)
-        diffs_norms = diffs_norms[planet_indices < len(self.planets)]
-        planet_indices = planet_indices[planet_indices < len(self.planets)]
-        
-        # planet_indices = [
-        #     index for index, p in enumerate(self.planets) if np.abs(p.coordinates - coordinate).sum() < max_dist
-        # ]
+    def nearest_neighbour_distances_slow(self, coordinate, max_dist):
+        planet_indices = [
+            index for index, p in enumerate(self.planets) if np.abs(p.coordinates - coordinate).sum() < max_dist
+        ]
 
         if len(planet_indices):
             diffs = np.vstack([self.planets[i].coordinates for i in planet_indices]) - coordinate
             diffs_norms = np.sqrt(np.sum(diffs**2, axis=1))
+        else:
+            diffs, diffs_norms = np.array([]), np.array([])
+        return diffs, diffs_norms, planet_indices 
+    
+    def nearest_neighbour_distances(self, coordinate, max_dist):
+        diffs_norms, planet_indices = self.tree.query(coordinate, len(self.planets), distance_upper_bound=max_dist)
+        diffs_norms = diffs_norms[planet_indices < len(self.planets)]
+        planet_indices = planet_indices[planet_indices < len(self.planets)]
+
+        if len(planet_indices):
+            diffs = np.vstack([self.planets[i].coordinates for i in planet_indices]) - coordinate
         else:
             diffs, diffs_norms = np.array([]), np.array([])
         return diffs, diffs_norms, planet_indices 
@@ -41,30 +48,23 @@ class PlanetGroup:
         return np.vstack(gravity_contrib).sum(axis=0), [self.planets[i] for i in planet_indices]
 
 
-class Planet:
-
-    def __init__(self, position, radius=50):
+class BasePlanet:
+    def __init__(self, position, diameter=50):
         self.logger = logging.getLogger("Planet")
         self.render_range = 200
-        self.radius = radius
+        self.diameter = diameter
         self.grav_force = deriv_combination(4, 6, 0.2, 4, 1.2)
-        self.scale = (self.radius + 25) / 0.15
-
-        # self.scale = 300
+        self.scale = (self.diameter + 25) / 0.15
         self.pos = position
         self.coordinates = position
-        self.color = (np.random.randint(low=150, high=255), np.random.randint(low=50, high=220)) + (0,)
-        self.surface = pygame.Surface((self.radius, self.radius)).convert_alpha()
-        self.surface.fill((0, 0, 0, 0))
-        pygame.draw.ellipse(self.surface, self.color + (100,), (0, 0, self.radius, self.radius))
-        pygame.draw.ellipse(self.surface, self.color + (255,), (0.1 * self.radius, 0.1 * self.radius, self.radius * 0.8, self.radius * 0.8))
-        self.logger.info(f"Created Planet at {tuple(self.pos)} with color {config.rgb_to_hex(self.color)}")
-        
-    def calc_gravity(self, diff, dist):
-        # diff = self.pos - other_pos
-        # diff_norm = np.sqrt(np.sum(diff**2))
-        return self.grav_force(dist / self.scale) * diff / dist
 
+    @property
+    def surface(self):
+        raise NotImplementedError("needs to be implemented in subclass")
+    
+    def calc_gravity(self, diff, dist):
+        return self.grav_force(dist / self.scale) * diff / dist
+    
     def update_position_and_draw(self, screen, dt, speed):
         self.pos = self.pos - dt * speed
         if self.pos[0] > -self.render_range and self.pos[1] < screen.get_width() + self.render_range \
@@ -72,13 +72,25 @@ class Planet:
             screen.blit(self.surface, self.surface.get_rect(center=tuple(self.pos)))
 
 
-class FloatText:
+class PlanetSimple(BasePlanet):
 
-    def __init__(self, font="consolas", fontsize=15):
-        pygame.font.init()
-        self.font = pygame.font.SysFont(font, fontsize)
-        
-    def render(self, screen, pos, text):
-        text_surf = self.font.render(text, False, config.star_color, config.space_color)
-        screen.blit(text_surf, text_surf.get_rect(midtop=pos))
+    def __init__(self, position, diameter=50):
+        super().__init__(position, diameter=diameter)
+        self.color = (np.random.randint(low=150, high=255), np.random.randint(low=50, high=220)) + (0,)
+        self._surface = pygame.Surface((self.diameter, self.diameter)).convert_alpha()
+        self._surface.fill((0, 0, 0, 0))
+        pygame.draw.ellipse(self._surface, self.color + (100,), (0, 0, self.diameter, self.diameter))
+        pygame.draw.ellipse(self._surface, self.color + (255,), (0.1 * self.diameter, 0.1 * self.diameter, self.diameter * 0.8, self.diameter * 0.8))
+        self.logger.info(f"Created Planet at {tuple(self.pos)} with color {config.rgb_to_hex(self.color)}")
+    
+    @property
+    def surface(self):
+        return self._surface
+    
+    
+
+    
+
+
+
         

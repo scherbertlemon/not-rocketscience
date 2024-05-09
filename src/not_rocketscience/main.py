@@ -5,7 +5,8 @@ from .framework import GameBase
 from .config import config
 from .background import LayeredScrollingStarBackground
 from .ship import Ship
-from .objects import Planet, FloatText, PlanetGroup
+from .planets import PlanetSimple, PlanetGroup
+from .hud import FloatText
 
 from time import time
 
@@ -27,23 +28,16 @@ class NotRocketScience(GameBase):
         
         self.txt = FloatText(fontsize=12)
         self.ship = Ship(0.5 * np.array(self.screen_size))
-        
-        # self.planets = [Planet(np.array((900, 200)))]
 
         self.n_planets = config.number_of_planets
-        # self.planet_initial_positions = np.hstack((
-        #     np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
-        #     np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
-        # ))
-        # self.planets = [Planet(pos, radius=np.random.randint(10, 200)) for pos in self.planet_initial_positions]
-
         self.planets = PlanetGroup(
+            PlanetSimple,
             np.hstack((
                 np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
                 np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
             )),
-            radius_max=200,
-            radius_min=10
+            diameter_max=200,
+            diameter_min=10
         )
 
         self.speed = np.array([0, 0])

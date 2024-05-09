@@ -9,7 +9,7 @@ class Ship:
         # self.layer = pygame.Surface((100, 100)).convert_alpha()
         # self.layer.fill((0, 0, 0, 0))
         # self.ship = pygame.draw.rect(self.layer, (255, 0, 0, 255), (40, 25, 20, 50))
-        self.sprites = [pygame.image.load(config.asset_path / f"ship{i}.png") for i in range(5, 9)]
+        self.sprites = [pygame.image.load(config.asset_path / "ships" / f"ship{i}.png") for i in range(5, 9)]
         self.angle = 0
         self.thrust = 0
         self.rotation = 0
