@@ -8,9 +8,12 @@ from scipy.spatial import KDTree
 
 class PlanetGroup:
 
-    def __init__(self, planet_class, coordinates, diameter_min=20, diameter_max=180):
+    def __init__(self, planet_class, coordinates, diameter_min=20, diameter_max=180, planet_kwargs=None):
+        if planet_kwargs is None:
+            planet_kwargs = dict()
+        
         self.planets = [
-            planet_class(pos, diameter=np.random.randint(diameter_min, diameter_max))
+            planet_class(pos, diameter=np.random.randint(diameter_min, diameter_max), **planet_kwargs)
             for pos in coordinates
         ]
         self.tree = KDTree(coordinates)
@@ -74,7 +77,7 @@ class BasePlanet:
 
 class PlanetSimple(BasePlanet):
 
-    def __init__(self, position, diameter=50):
+    def __init__(self, position, diameter=50, **kwargs):
         super().__init__(position, diameter=diameter)
         self.color = (np.random.randint(low=150, high=255), np.random.randint(low=50, high=220)) + (0,)
         self._surface = pygame.Surface((self.diameter, self.diameter)).convert_alpha()
@@ -86,6 +89,65 @@ class PlanetSimple(BasePlanet):
     @property
     def surface(self):
         return self._surface
+    
+
+class PlanetTexture(BasePlanet):
+    def __init__(self, position, diameter=200, rotation_speed=100, atmosphere_thickness=20, atmosphere_layers=3):
+        super().__init__(position, diameter=diameter)
+        self.texture = pygame.image.load(config.asset_path / "planets" / "planet_01.png")
+        new_width = self.diameter / self.texture.get_height() * self.texture.get_width()
+        self.texture = pygame.transform.scale(self.texture, (new_width, self.diameter))
+
+        self.atmos_color = self.texture.get_at(tuple(int(0.5 * s) for s in self.texture.get_size()))
+
+        self._surface = pygame.Surface(2 * (self.diameter,)).convert_alpha()
+        self._surface.fill((0, 0, 0, 0))
+        
+        self.last_time = pygame.time.get_ticks()
+        
+        if isinstance(rotation_speed, tuple):
+            self.rotation_speed = np.random.randint(*rotation_speed)
+        elif isinstance(rotation_speed, int):
+            self.rotation_speed = rotation_speed
+        else:
+            raise NotImplementedError("rotation speed must be tuple(min, max) or an integer")
+        
+        self.texture_positions = [0, self.texture.get_width() + 1]
+
+        self.atmoshpere_tickness, self._atmosphere = self.build_atmosphere(atmosphere_thickness, atmosphere_layers)
+
+    def build_atmosphere(self, thickness, layers):
+        base = pygame.Surface(2 * (self.diameter + 2 * thickness,)).convert_alpha()
+        base.fill((0, 0, 0, 0))
+
+        for i_layer in range(0, layers):
+            pygame.draw.circle(
+                base,
+                self.atmos_color[:3] + (int((i_layer + 1) / layers * 255),),
+                tuple(.5 * s for s in base.get_size()),
+                0.5 * self.diameter + (1 - i_layer / layers) * thickness
+            )
+
+        return thickness, base
+
+    @property
+    def surface(self):
+        now = pygame.time.get_ticks()
+        timestep_s = (now - self.last_time) / 1000
+        self.last_time = now
+
+        pygame.draw.circle(self._surface, (255, 255, 255, 255), center=2 * (0.5 * self.diameter,), radius=0.5 * self.diameter)
+        for pos in self.texture_positions:
+            self._surface.blit(self.texture, (pos, 0), None, pygame.BLEND_RGBA_MULT)
+
+        self._atmosphere.blit(self._surface, 2 * (self.atmoshpere_tickness,))  # this is slow
+        self.texture_positions = [
+            pos + (2 * self.texture.get_width() + 2 if pos < -self.texture.get_width() else 0) - timestep_s * self.rotation_speed
+            for pos in self.texture_positions
+        ]
+        return self._atmosphere
+
+    
     
     
 

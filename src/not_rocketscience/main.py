@@ -5,7 +5,7 @@ from .framework import GameBase
 from .config import config
 from .background import LayeredScrollingStarBackground
 from .ship import Ship
-from .planets import PlanetSimple, PlanetGroup
+from .planets import PlanetSimple, PlanetGroup, PlanetTexture
 from .hud import FloatText
 
 from time import time
@@ -31,13 +31,14 @@ class NotRocketScience(GameBase):
 
         self.n_planets = config.number_of_planets
         self.planets = PlanetGroup(
-            PlanetSimple,
+            PlanetTexture,
             np.hstack((
                 np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
                 np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
             )),
-            diameter_max=200,
-            diameter_min=10
+            diameter_max=150,
+            diameter_min=10,
+            planet_kwargs=dict(rotation_speed=(20, 50), atmosphere_thickness=10, atmosphere_layers=5)
         )
 
         self.speed = np.array([0, 0])
@@ -77,7 +78,8 @@ class NotRocketScience(GameBase):
                 f"coordinates: ({self.ship.coordinates[0]:5.0f},{self.ship.coordinates[1]:5.0f}) "
                 f"screen_coordinates: {self.screen_coordinates} "
                 f"speed: ({self.speed[0]:5.0f},{self.speed[1]:5.0f}) "
-                f"feeling pull from planets: {len(planets_in_block)}"
+                f"feeling pull from planets: {len(planets_in_block)} "
+                f"FPS: {self.clock.get_fps():3.0f}"
             )
         )
 
