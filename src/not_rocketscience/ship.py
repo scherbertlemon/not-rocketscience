@@ -5,7 +5,7 @@ from .config import config
 
 class Ship:
 
-    def __init__(self):
+    def __init__(self, initial_position):
         # self.layer = pygame.Surface((100, 100)).convert_alpha()
         # self.layer.fill((0, 0, 0, 0))
         # self.ship = pygame.draw.rect(self.layer, (255, 0, 0, 255), (40, 25, 20, 50))
@@ -15,6 +15,7 @@ class Ship:
         self.rotation = 0
         self.last_time = pygame.time.get_ticks()
         self.sprite_index = 0
+        self.pos, self._coordinates = initial_position.copy(), initial_position.copy()
 
     @property
     def angle_rad(self):
@@ -40,10 +41,17 @@ class Ship:
             np.array([0, -self.thrust])
         )
     
-    def draw(self, screen, pos):
+    def move(self, offset):
+        self._coordinates += offset
+
+    @property
+    def coordinates(self):
+        return self._coordinates
+    
+    def draw(self, screen):
         # pygame.draw.rect(self.layer, self.fire_color, (45, 75, 10, 15))
         rotated_ship = pygame.transform.rotate(self.layer, self.angle)
-        screen.blit(rotated_ship, rotated_ship.get_rect(center=pos))
+        screen.blit(rotated_ship, rotated_ship.get_rect(center=self.pos))
 
     def controls(self):
         keys = pygame.key.get_pressed()
