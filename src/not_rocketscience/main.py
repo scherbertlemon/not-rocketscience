@@ -35,7 +35,7 @@ class NotRocketScience(GameBase):
             np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
             np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
         ))
-        self.planets = [Planet(pos) for pos in self.planet_initial_positions]
+        self.planets = [Planet(pos, radius=np.random.randint(10, 200)) for pos in self.planet_initial_positions]
 
         self.pos = 0.5 * np.array(self.screen_size)
         self.coordinates = self.pos
