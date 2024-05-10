@@ -94,7 +94,10 @@ class PlanetSimple(BasePlanet):
 class PlanetTexture(BasePlanet):
     def __init__(self, position, diameter=200, rotation_speed=100, atmosphere_thickness=20, atmosphere_layers=3):
         super().__init__(position, diameter=diameter)
-        self.texture = pygame.image.load(config.asset_path / "planets" / "planet_01.png")
+
+        planet_texture_path = config.asset_path / "planets" / f"planet_{np.random.randint(1, 3):02d}.png"
+        self.logger.info(f"Created planet with texture {planet_texture_path}")
+        self.texture = pygame.image.load(planet_texture_path)
         new_width = self.diameter / self.texture.get_height() * self.texture.get_width()
         self.texture = pygame.transform.scale(self.texture, (new_width, self.diameter))
 
