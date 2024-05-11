@@ -36,8 +36,8 @@ class NotRocketScience(GameBase):
                 np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
                 np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
             )),
-            diameter_max=150,
-            diameter_min=10,
+            diameter_max=200,
+            diameter_min=50,
             planet_kwargs=dict(rotation_speed=(20, 50), atmosphere_thickness=10, atmosphere_layers=5)
         )
 

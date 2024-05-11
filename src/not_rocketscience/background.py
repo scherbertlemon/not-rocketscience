@@ -29,7 +29,7 @@ class ScrollingStarBackground:
         # add new tiles that are not here
         for tile_id in self.positions:
             if tile_id not in self._tiles:
-                self.logger.debug(f"Generating tile {tile_id}")
+                self.logger.debug(f"Generating tile {tile_id}, amount of tiles: {len(self.positions)}")
                 tile = pygame.Surface(self.tile_size).convert_alpha()
 
                 if self.fill_background:
@@ -42,7 +42,7 @@ class ScrollingStarBackground:
         # remove tiles that are no longer needed
         delete_tile_ids = [tile_id for tile_id in self._tiles if tile_id not in self.positions]
         for delete_id in delete_tile_ids:
-            self.logger.debug(f"Removing tile {delete_id}")
+            self.logger.debug(f"Removing tile {delete_id}, amount of tiles: {len(self.positions)}")
             self._tiles.pop(delete_id)
         
         return self._tiles
