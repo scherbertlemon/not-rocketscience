@@ -18,7 +18,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     install_requires=parse_requirements(),
-    package_data={"not_rocketscience": ["*.png"]},
+    package_data={"not_rocketscience": ["*.png", "*.yaml"]},
     entry_points={
         "console_scripts": ["not-rocketscience = not_rocketscience.main:cli"]
     }

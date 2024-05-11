@@ -15,7 +15,7 @@ from time import time
 class NotRocketScience(GameBase):
 
     def __init__(self):
-        super().__init__(config.convert_tuple(config.screen_size), fps=config.fps)
+        super().__init__(config.convert_tuple(config.screen_size), fps=config.fps, vsync=config.vsync)
         
         self.star_background = LayeredScrollingStarBackground(
             tuple(dim * 2 for dim in self.screen_size),

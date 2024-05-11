@@ -21,7 +21,7 @@ class Configuration:
         return self._dict_from_yaml
     
     def get_config_file(self):
-        with open(Path(__file__).parents[2] / "config.yaml", "r") as fid:
+        with open(Path(__file__).parent / "config.yaml", "r") as fid:
             cfg = yaml.safe_load(fid)
         return cfg
     

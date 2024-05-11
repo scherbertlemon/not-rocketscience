@@ -6,15 +6,20 @@ from .config import config
 
 class GameBase:
     
-    def __init__(self, screen_size, fps=60):
+    def __init__(self, screen_size, fps=60, vsync=0):
         config.init_logging()
         pygame.init()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.screen_size = screen_size
-        self.screen = pygame.display.set_mode(screen_size)
+        if vsync:
+            self.screen = pygame.display.set_mode(screen_size, pygame.SCALED, vsync=1)
+            self.fps = 0
+        else:
+            self.screen = pygame.display.set_mode(screen_size, pygame.SCALED, vsync=1)
+            self.fps = fps
         self.clock = pygame.time.Clock()
         self.running = False
-        self.fps = fps
+        
         self.frametime_s = 0
 
     @property

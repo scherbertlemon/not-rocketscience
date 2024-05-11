@@ -3,6 +3,7 @@ screen_size:
   - 700
 
 fps: 72
+vsync: 1
 
 background_number_of_layers: 4
 background_number_of_stars: 120
@@ -37,12 +38,12 @@ logging:
       formatter: brief
       class: logging.StreamHandler
       stream: ext://sys.stdout
-    file:
-      level: DEBUG
-      formatter: default
-      class: logging.FileHandler
-      filename: ./output.log
-      mode: w
+    # file:
+    #   level: DEBUG
+    #   formatter: default
+    #   class: logging.FileHandler
+    #   filename: ./output.log
+    #   mode: w
   loggers:
     root:
       level: DEBUG
