@@ -12,7 +12,7 @@ class Ship:
         self.sprites = [pygame.image.load(config.asset_path / "ships" / f"ship{i}.png") for i in range(5, 9)]
         self.angle = 0
         self.thrust = 0
-        self.rotation = 0
+        self.rotation_speed = 0
         self.last_time = pygame.time.get_ticks()
         self.sprite_index = 0
         self.pos, self._coordinates = initial_position.copy(), initial_position.copy()
@@ -29,8 +29,8 @@ class Ship:
             self.sprite_index = (self.sprite_index + 1) % 2
         return self.sprites[self.sprite_index + 2 * int(bool(self.thrust))]
     
-    def apply_rotation(self):
-        self.angle += self.rotation
+    def apply_rotation(self, dt):
+        self.angle += dt * self.rotation_speed
 
     def calc_acceleration(self):
         return np.matmul(
@@ -56,11 +56,11 @@ class Ship:
     def controls(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.rotation = config.ship_rotation_increment
+            self.rotation_speed = config.ship_rotation_speed
         elif keys[pygame.K_RIGHT]:
-            self.rotation = -config.ship_rotation_increment
+            self.rotation_speed = -config.ship_rotation_speed
         else:
-            self.rotation = 0
+            self.rotation_speed = 0
 
         if keys[pygame.K_x]:
             self.thrust = config.ship_thrust

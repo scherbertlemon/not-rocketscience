@@ -53,7 +53,7 @@ class PlanetGroup:
 
 class BasePlanet:
     def __init__(self, position, diameter=50):
-        self.logger = logging.getLogger("Planet")
+        self.logger = logging.getLogger("BasePlanet")
         self.render_range = 200
         self.diameter = diameter
         self.grav_force = deriv_combination(4, 6, 0.2, 4, 1.2)
@@ -72,7 +72,8 @@ class BasePlanet:
         self.pos = self.pos - dt * speed
         if self.pos[0] > -self.render_range and self.pos[1] < screen.get_width() + self.render_range \
             and self.pos[1] > -self.render_range and self.pos[1] < screen.get_height() + self.render_range:
-            screen.blit(self.surface, self.surface.get_rect(center=tuple(self.pos)))
+            surf = self.surface
+            screen.blit(surf, surf.get_rect(center=tuple(self.pos)))
 
 
 class PlanetSimple(BasePlanet):

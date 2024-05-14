@@ -9,7 +9,7 @@ background_number_of_layers: 4
 background_number_of_stars: 120
 
 ship_thrust: 400  # pixels per second per second
-ship_rotation_increment: 5  # degrees per frame
+ship_rotation_speed: 270  # degrees per second
 
 movement_damping: 0.1
 
@@ -18,7 +18,7 @@ star_color: "#fffac9"
 ship_color: "#ff0000"
 fire_color: "#ffc864"
 
-number_of_planets: 50
+number_of_planets: 200
 
 
 logging:
@@ -35,7 +35,7 @@ logging:
   handlers: 
     stream:
       level: DEBUG
-      formatter: brief
+      formatter: short
       class: logging.StreamHandler
       stream: ext://sys.stdout
     # file:
@@ -45,6 +45,10 @@ logging:
     #   filename: ./output.log
     #   mode: w
   loggers:
+    BasePlanet:
+      level: DEBUG
+    ScrollingStarBackground:
+      level: INFO
     root:
       level: DEBUG
       handlers: 

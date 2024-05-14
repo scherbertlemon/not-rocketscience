@@ -33,10 +33,10 @@ class NotRocketScience(GameBase):
         self.planets = PlanetGroup(
             PlanetTexture,
             np.hstack((
-                np.random.randint(-10 * self.screen_size[0], 10 * self.screen_size[0], size=(self.n_planets, 1)),
-                np.random.randint(-10 * self.screen_size[1], 10 * self.screen_size[1], size=(self.n_planets, 1))
+                np.random.randint(-20 * self.screen_size[0], 20 * self.screen_size[0], size=(self.n_planets, 1)),
+                np.random.randint(-20 * self.screen_size[1], 20 * self.screen_size[1], size=(self.n_planets, 1))
             )),
-            diameter_max=200,
+            diameter_max=175,
             diameter_min=50,
             planet_kwargs=dict(rotation_speed=(20, 50), atmosphere_thickness=10, atmosphere_layers=5)
         )
@@ -67,7 +67,7 @@ class NotRocketScience(GameBase):
         self.star_background.draw_tiles(self.screen, self.ship.pos, self.frametime_s, self.speed)
         [p.update_position_and_draw(self.screen, self.frametime_s, self.speed) for p in self.planets.planets]
         
-        self.ship.apply_rotation()
+        self.ship.apply_rotation(self.frametime_s)
         self.ship.move(self.frametime_s * self.speed)
         self.ship.draw(self.screen)
 
