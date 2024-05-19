@@ -85,7 +85,7 @@ class Ship:
             self._fuel -= self.ship_fuel_consumption * dt
 
     def regenerate_fuel(self, dt, multiplier):
-        if self._fuel <= self.ship_fuel_capacity:
+        if self._fuel <= self.ship_fuel_capacity and self._thrust == 0:
             self._fuel += dt * multiplier * self.ship_fuel_regeneration
 
     @property

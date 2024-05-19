@@ -70,7 +70,8 @@ class NotRocketScience(GameBase):
         
         self.ship.regenerate_fuel(
             self.frametime_s,
-            np.sqrt(np.sum(grav_accel**2)) * 5 / self.screen_width)
+            1.0  # np.sqrt(np.sum(grav_accel**2)) * 5 / self.screen_width
+        )
         self.ship.draw(self.screen, self.frametime_s, self.speed)
         self.fuel_gaige.draw(self.screen, self.ship.fuel / self.ship.ship_fuel_capacity)
 

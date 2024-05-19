@@ -24,6 +24,7 @@ pilots:
     ship_movement_damping: 0.1
     ship_animation_frames: 2
     ship_fuel_consumption: 5
+    ship_fuel_regeneration: 7
 
 logging:
   # standard logging configuration
