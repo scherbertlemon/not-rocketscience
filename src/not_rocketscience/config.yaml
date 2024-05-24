@@ -1,6 +1,6 @@
 screen_size:
-  - 1200
-  - 700
+  - 1400
+  - 900
 
 fps: 72
 vsync: 1
@@ -19,6 +19,7 @@ number_of_planets: 200
 pilots:
   - pilot_name: "Cptn. Default"
     sprite_name_pattern: "ship_cd_\\d\\.png"
+    pilot_avatar: captain_default_150.png
     ship_thrust: 400  # pixels per second per second
     ship_rotation_speed: 270  # degrees per second
     ship_movement_damping: 0.1

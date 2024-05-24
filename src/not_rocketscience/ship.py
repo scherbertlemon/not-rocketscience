@@ -19,6 +19,7 @@ class Ship:
         asset_path=None,
         sprite_name_pattern=r"ship_cd_\d\.png",
         pilot_name="Cptn Default",
+        pilot_avatar="captain_default_300.png",
         ship_animation_frames=2,
         ship_thrust=400,
         ship_rotation_speed=270,
@@ -37,6 +38,8 @@ class Ship:
         ])
         self.logger.info("found ship sprites:\n%s", pformat([f.name for f in self.sprite_filenames]))
 
+        self.avatar_filename = asset_path / pilot_avatar
+
         self.pilot_name = pilot_name
         self.ship_animation_frames =  ship_animation_frames
         self.ship_thrust = ship_thrust
@@ -47,6 +50,10 @@ class Ship:
         self.ship_fuel_regeneration = ship_fuel_regeneration
 
         self.sprites = [pygame.image.load(filename) for filename in self.sprite_filenames]
+        if self.avatar_filename.exists():
+            self.pilot_avatar = pygame.image.load(self.avatar_filename)
+        else:
+            raise FileNotFoundError(f"Avatar {self.avatar_filename} cannot be found.")
 
         self._angle = 0
         self._thrust = 0
