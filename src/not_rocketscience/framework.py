@@ -6,17 +6,23 @@ from .config import config
 
 class GameBase:
     
-    def __init__(self, screen_size, fps=60, vsync=0):
+    def __init__(self, screen_size, fps=60, vsync=0, caption="Not Rocketscience"):
         config.init_logging()
         pygame.init()
         self.logger = logging.getLogger(self.__class__.__name__)
         self.screen_size = screen_size
+        
+        pygame.display.set_icon(pygame.image.load(config.asset_path / "ship_icon.png"))
+
         if vsync:
             self.screen = pygame.display.set_mode(screen_size, pygame.SCALED, vsync=1)
             self.fps = 0
         else:
             self.screen = pygame.display.set_mode(screen_size, pygame.SCALED, vsync=1)
             self.fps = fps
+
+        pygame.display.set_caption(caption)
+        
         self.clock = pygame.time.Clock()
         self.running = False
         

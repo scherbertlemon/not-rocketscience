@@ -1,6 +1,6 @@
 screen_size:
-  - 1400
-  - 900
+  - 1200
+  - 700
 
 fps: 72
 vsync: 1
@@ -14,7 +14,7 @@ ship_color: "#ff0000"
 fire_color: "#ffc864"
 red_color: "#db5941"
 
-number_of_planets: 200
+number_of_planets: 250
 
 pilots:
   - pilot_name: "Cptn. Default"
@@ -25,7 +25,7 @@ pilots:
     ship_movement_damping: 0.1
     ship_animation_frames: 2
     ship_fuel_consumption: 5
-    ship_fuel_regeneration: 7
+    ship_fuel_regeneration: 5
 
 logging:
   # standard logging configuration
