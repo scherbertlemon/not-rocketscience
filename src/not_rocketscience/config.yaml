@@ -19,12 +19,27 @@ number_of_planets: 250
 pilots:
   - pilot_name: "Cptn. Default"
     sprite_name_pattern: "ship_cd_\\d\\.png"
-    pilot_avatar: captain_default_150.png
     ship_thrust: 400  # pixels per second per second
     ship_rotation_speed: 270  # degrees per second
     ship_movement_damping: 0.1
     ship_animation_frames: 2
     ship_fuel_consumption: 5
+    ship_fuel_regeneration: 5
+  - pilot_name: "Paul Arthritis"
+    sprite_name_pattern: "ship_pa_\\d\\.png"
+    ship_thrust: 200  # pixels per second per second
+    ship_rotation_speed: 150  # degrees per second
+    ship_movement_damping: 0.02
+    ship_animation_frames: 3
+    ship_fuel_consumption: 2
+    ship_fuel_regeneration: 2
+  - pilot_name: "Louise Cannon"
+    sprite_name_pattern: "ship_lc_\\d\\.png"
+    ship_thrust: 800  # pixels per second per second
+    ship_rotation_speed: 310  # degrees per second
+    ship_movement_damping: 0.15
+    ship_animation_frames: 2
+    ship_fuel_consumption: 9
     ship_fuel_regeneration: 5
 
 logging:

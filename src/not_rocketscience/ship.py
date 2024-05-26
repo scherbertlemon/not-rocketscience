@@ -15,7 +15,9 @@ class Ship:
     """
     def __init__(
         self,
-        initial_position,
+        screen_coordinates,
+        world_coordinates,
+        initial_angle=0,
         asset_path=None,
         sprite_name_pattern=r"ship_cd_\d\.png",
         pilot_name="Cptn Default",
@@ -50,18 +52,19 @@ class Ship:
         self.ship_fuel_regeneration = ship_fuel_regeneration
 
         self.sprites = [pygame.image.load(filename) for filename in self.sprite_filenames]
-        if self.avatar_filename.exists():
-            self.pilot_avatar = pygame.image.load(self.avatar_filename)
-        else:
-            raise FileNotFoundError(f"Avatar {self.avatar_filename} cannot be found.")
+        # if self.avatar_filename.exists():
+        #     self.pilot_avatar = pygame.image.load(self.avatar_filename)
+        # else:
+        #     raise FileNotFoundError(f"Avatar {self.avatar_filename} cannot be found.")
 
-        self._angle = 0
+        self._angle = initial_angle
         self._thrust = 0
         self._rotation_speed = 0
         self._last_time = pygame.time.get_ticks()
         self._sprite_index = 0
         self._fuel = self.ship_fuel_capacity
-        self._screen_coordinates, self._world_coordinates = initial_position.copy(), initial_position.copy()
+        self._screen_coordinates = screen_coordinates.copy()
+        self._world_coordinates = world_coordinates.copy()
 
     @property
     def angle_rad(self):

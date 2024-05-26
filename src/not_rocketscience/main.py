@@ -8,6 +8,7 @@ from .background import LayeredScrollingStarBackground
 from .ship import Ship
 from .planets import PlanetGroup, PlanetTexture
 from .hud import FloatText, FuelGaige, PilotDisplay
+import pygame
 
 
 class NotRocketScience(GameBase):
@@ -31,11 +32,17 @@ class NotRocketScience(GameBase):
         )
         self.txt = FloatText(fontsize=12)
         self.fuel_gaige = FuelGaige((10, self.screen_height - 10))
+
+        self.n_pilots = len(config.pilots)
+        self.pilot_index = 0
+        self.pilot_switch_time = pygame.time.get_ticks()
+
         self.ship = Ship(
             0.5 * np.array(self.screen_size),
-            **config.pilots[0]
+            0.5 * np.array(self.screen_size),
+            **config.pilots[self.pilot_index]
         )
-        self.pilot_display = PilotDisplay((self.screen_width - 10, 10), fontsize=20)
+        # self.pilot_display = PilotDisplay((self.screen_width - 10, 10), fontsize=20)
 
         self.n_planets = config.number_of_planets
         self.planets = PlanetGroup(
@@ -75,7 +82,7 @@ class NotRocketScience(GameBase):
         )
         self.ship.draw(self.screen, self.frametime_s, self.speed)
         self.fuel_gaige.draw(self.screen, self.ship.fuel / self.ship.ship_fuel_capacity)
-        self.pilot_display.render(self.screen, self.ship.pilot_avatar, self.ship.pilot_name)
+        # self.pilot_display.render(self.screen, self.ship.pilot_avatar, self.ship.pilot_name)
         self.txt.render(
             self.screen,
             (self.screen_width / 2, 0),
@@ -90,6 +97,29 @@ class NotRocketScience(GameBase):
 
     def process_inputs(self):
         self.ship.controls()
+
+        keys = pygame.key.get_pressed()
+        now = pygame.time.get_ticks()
+
+        if now - self.pilot_switch_time > 1000:
+            if keys[pygame.K_UP]:
+                self.pilot_index += 1
+                switch_ship = True
+                self.pilot_switch_time = now
+            elif keys[pygame.K_DOWN]:
+                self.pilot_index -= 1
+                switch_ship = True
+                self.pilot_switch_time = now
+            else:
+                switch_ship = False
+            
+            if switch_ship:
+                self.ship = Ship(
+                    self.ship._screen_coordinates,
+                    self.ship.world_coordinates,
+                    initial_angle=self.ship._angle,
+                    **config.pilots[self.pilot_index % self.n_pilots]
+                )
 
 
 def cli():
