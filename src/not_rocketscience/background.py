@@ -1,7 +1,8 @@
 """
 Everything related to the scrolling background for Not Rocketscience. Scrolling background effect
-is achieved by initializing multiple layers of starry backgrounds (`ScrollingStarBackground`),
-which are then scrolled with different speeds. This generates a fake 3D effect.
+is achieved by initializing multiple layers of starry backgrounds
+(:py:class:`ScrollingStarBackground`), which are then scrolled with different speeds. This
+generates a fake 3D effect.
 """
 import logging
 import pygame
@@ -21,8 +22,8 @@ class ScrollingStarBackground:
     :param initial_position: center position in screen coordinates of first tile
     :param space_color: background color. Only shows if `fill_background` is `True`
     :param star_color: color which stars are drawn in
-    :param fill_background: fill background with `space_color` (`True` default), if `False`
-        transparent
+    :param fill_background: fill background with ``space_color`` (``True`` default), if
+        ``False`` transparent
     :param star_size: Size in pixels of 'square' stars
     :param n_stars: amount of stars in one tile.
     """
@@ -48,9 +49,10 @@ class ScrollingStarBackground:
     @property
     def tiles(self):
         """
-        Manages the tiles by id, based on coordinates in `ScrollingStarBackground.positions`. For
-        tile ids in `positions`, which are not yet in the `_tiles` dictionary, a new tile is added.
-        Tile ids which are in `_tiles` but not in `positions` any more are deleted.
+        Manages the tiles by id, based on coordinates in
+        :py:attr:`ScrollingStarBackground.positions`. For tile ids in ``positions``, which are not
+        yet in the ``_tiles`` dictionary, a new tile is added.
+        Tile ids which are in ``_tiles`` but not in ``positions`` any more are deleted.
         """
         # add new tiles that are not here
         for tile_id in self.positions:
@@ -81,8 +83,8 @@ class ScrollingStarBackground:
         """
         Randomly distribute stars on a tile surface
 
-        :param tile: `pygame.Surface` object representing one tile of background.
-        :return: same `pygame.Surface` object that comes in, but with stars drawn on it
+        :param tile: :py:class:`pygame.Surface` object representing one tile of background.
+        :return: same :py:class:`pygame.Surface` object that comes in, but with stars drawn on it
         """
         star_coordinates = np.vstack(
             (
@@ -105,9 +107,9 @@ class ScrollingStarBackground:
 
     def block_distance_to_tiles(self, pos):
         """
-        Calculates city block distance of screen coordinate `pos` to all tile center positions
+        Calculates city block distance of screen coordinate ``pos`` to all tile center positions
         
-        :param pos: 1 x 2 `numpy.array` representing a screen coordinate
+        :param pos: 1 x 2 :py:class:`numpy.array` representing a screen coordinate
         :return: dict of `tile_id -> distance to pos`
         """
         coords, positions = zip(*self.positions.items())
@@ -119,11 +121,11 @@ class ScrollingStarBackground:
 
     def manage_tile_positions(self, pos, speed):
         """
-        Dynamically adds tiles as neighbors to tile closest to screen coordinate `pos`, in the 
-        direction pointed by `speed`.
+        Dynamically adds tiles as neighbors to tile closest to screen coordinate ``pos``, in the 
+        direction pointed by ``speed``.
 
-        :param pos: 1 x 2 `numpy.array` representing a screen coordinate, to determine closest tile
-        :param speed: 1 x 2 `numpy.array` indicating the speed vector of movement to determine
+        :param pos: 1 x 2 :py:class:`numpy.array` representing a screen coordinate, to determine closest tile
+        :param speed: 1 x 2 :py:class:`numpy.array` indicating the speed vector of movement to determine
             direction in which tiles need to be added
         """
         tiles_distance = self.block_distance_to_tiles(pos)
@@ -159,14 +161,14 @@ class ScrollingStarBackground:
     def draw_tiles(self, screen, ship_position, dt, speed):
         """
         After deciding which tiles need to be removed and which need to be added based on
-        `ship_position` and `speed`, shift all tiles by the distance travelled during time step
-        `dt` with `speed` into the opposite direction, and then draw them on the screen.
+        ``ship_position`` and ``speed``, shift all tiles by the distance travelled during time step
+        ``dt`` with ``speed`` into the opposite direction, and then draw them on the screen.
 
-        :param screen: Display surface of `pygame`.
-        :param ship_position: 1 x 2 `numpy.array` position towards which tile positions will be
+        :param screen: Display surface of ``pygame``.
+        :param ship_position: 1 x 2 :py:class:`numpy.array` position towards which tile positions will be
             evaluated.
         :param dt: time step size, usually the time passed during one frame.
-        :param speed: 1 x 2 `numpy.array` representing speed vector. tiles wil move in opposite
+        :param speed: 1 x 2 :py:class:`numpy.array` representing speed vector. tiles wil move in opposite
             direction to simulate movement.
         """
         self.manage_tile_positions(ship_position, speed.astype(int))
@@ -177,9 +179,9 @@ class ScrollingStarBackground:
 
 class LayeredScrollingStarBackground:
     """
-    Container class to layer multiple instances of `ScrollingStarBackground` on top of each other.
-    Layers will be enlarged by factors defined in `LayeredScrollingStarBackground.scale_modifiers`
-    and movement speeds will be changed by `LayeredScrollingStarBackground.speed_modifiers` to
+    Container class to layer multiple instances of :py:class:`ScrollingStarBackground` on top of each other.
+    Layers will be enlarged by factors defined in :py:attr:`LayeredScrollingStarBackground.scale_modifiers`
+    and movement speeds will be changed by :py:attr:`LayeredScrollingStarBackground.speed_modifiers` to
     create a parallactic effect.
 
     :param tile_size: unmodified tile size of the back-most layer. This layer will also have opaque
@@ -235,15 +237,15 @@ class LayeredScrollingStarBackground:
 
     def draw_tiles(self, screen, ship_position, dt, speed):
         """
-        Draws the tiles for all layers, see `ScrollingStarBackground.draw_tiles`. The factors in
-        `LayeredScrollingStarBackground.speed_modifiers` are applied to the speed vector on each
+        Draws the tiles for all layers, see :py:meth:`ScrollingStarBackground.draw_tiles`. The factors in
+        :py:attr:`LayeredScrollingStarBackground.speed_modifiers` are applied to the speed vector on each
         layer.
 
-        :param screen: Display surface of `pygame`.
-        :param ship_position: 1 x 2 `numpy.array` position towards which tile positions will be
+        :param screen: Display surface of ``pygame``.
+        :param ship_position: 1 x 2 :py:class:`numpy.array` position towards which tile positions will be
             evaluated.
         :param dt: time step size, usually the time passed during one frame.
-        :param speed: 1 x 2 `numpy.array` representing speed vector. tiles wil move in opposite
+        :param speed: 1 x 2 :py:class:`numpy.array` representing speed vector. tiles wil move in opposite
             direction to simulate movement.
         """
         for layer, speed_mod in zip(self.layers, self.speed_modifiers):

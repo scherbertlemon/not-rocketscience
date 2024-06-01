@@ -4,3 +4,4 @@ _venv
 *.egg-info
 .DS_Store
 .vscode
+docs/.doctrees
