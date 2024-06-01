@@ -10,7 +10,7 @@ class FloatText:
         self.font = pygame.font.SysFont(font, fontsize)
         
     def render(self, screen, pos, text):
-        text_surf = self.font.render(text, False, config.star_color, config.space_color)
+        text_surf = self.font.render(text, False, config.colors.stars, config.colors.space)
         screen.blit(text_surf, text_surf.get_rect(midtop=pos))
 
 
@@ -23,7 +23,7 @@ class PilotDisplay(FloatText):
     def render(self, screen, picture, name):
         rect = picture.get_rect(topright=self.screen_position)
         screen.blit(picture, rect)
-        screen.blit(self.font.render(name, False, config.star_color), rect.bottomleft)
+        screen.blit(self.font.render(name, False, config.colors.stars), rect.bottomleft)
 
 
 class FuelGaige:
@@ -34,8 +34,8 @@ class FuelGaige:
         self.fill_height = 5 
         self.surface = pygame.Surface((self.width, self.height))
         self.screen_position = screen_position_bottom_left
-        self.bg_color = config.hex_to_rgb(config.red_color)
-        self.fg_color = config.hex_to_rgb(config.fire_color)
+        self.bg_color = config.colors.hud_red
+        self.fg_color = config.colors.fire
 
     def draw(self, screen, full_amount):
         self.surface.fill(self.bg_color)

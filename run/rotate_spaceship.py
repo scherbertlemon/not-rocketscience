@@ -1,3 +1,6 @@
+"""
+Demonstrate spaceship class
+"""
 import numpy as np
 from not_rocketscience import GameBase, config, Ship
 
@@ -5,9 +8,10 @@ from not_rocketscience import GameBase, config, Ship
 class TestSpaceship(GameBase):
 
     def __init__(self):
-        super().__init__(config.convert_tuple(config.screen_size), fps=20, vsync=0)
-        
+        super().__init__(config.screen_size, fps=20, vsync=0)
+
         self.ship = Ship(
+            np.array((self.screen_width / 2, self.screen_height / 2)),
             np.array((self.screen_width / 2, self.screen_height / 2)),
             **config.pilots[0]
         )

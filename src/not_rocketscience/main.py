@@ -17,7 +17,7 @@ class NotRocketScience(GameBase):
     """
     def __init__(self):
         super().__init__(
-            config.convert_tuple(config.screen_size),
+            config.screen_size,
             fps=config.fps,
             vsync=config.vsync
         )
@@ -26,8 +26,8 @@ class NotRocketScience(GameBase):
             tuple(dim * 2 for dim in self.screen_size),
             0.5 * np.array(self.screen_size),
             n_stars=config.background_number_of_stars,
-            spacecolor=config.hex_to_rgb(config.space_color),
-            starcolor=config.hex_to_rgb(config.star_color),
+            space_color=config.colors.space,
+            star_color=config.colors.stars,
             n_layers=config.background_number_of_layers
         )
         self.txt = FloatText(fontsize=12)

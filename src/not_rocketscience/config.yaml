@@ -8,11 +8,15 @@ vsync: 1
 background_number_of_layers: 4
 background_number_of_stars: 120
 
-space_color: "#131424"
-star_color: "#fffac9"
-ship_color: "#ff0000"
-fire_color: "#ffc864"
-red_color: "#db5941"
+colors:
+  space: "#131424"
+  stars: "#fffac9"
+  fire: "#ffc864"
+  glass_blue: "#1F2DBC"
+  ship_red: "#D01D18"
+  ship_green: "#00CF9A"
+  ship_blue: "#0091CF"
+  hud_red: "#db5941"
 
 number_of_planets: 250
 
