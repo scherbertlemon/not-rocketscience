@@ -478,35 +478,109 @@ package folder</p>
 </section>
 <section id="module-not_rocketscience.framework">
 <span id="not-rocketscience-framework-module"></span><h2>not_rocketscience.framework module<a class="headerlink" href="#module-not_rocketscience.framework" title="Link to this heading"></a></h2>
+<p>Base class for main game loop</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">not_rocketscience.framework.</span></span><span class="sig-name descname"><span class="pre">GameBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vsync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Not</span> <span class="pre">Rocketscience'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.framework.GameBase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class defining the structure for a pygame game loop: There are some tasks for window setup
+in the constructor, and two abstract methods</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="#not_rocketscience.framework.GameBase.process_inputs" title="not_rocketscience.framework.GameBase.process_inputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GameBase.process_inputs()</span></code></a>:</dt><dd><p>Runs before rendering the current frame and can hold
+everything that needs to happen whenever buttons are pressed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#not_rocketscience.framework.GameBase.render_scene" title="not_rocketscience.framework.GameBase.render_scene"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GameBase.render_scene()</span></code></a>:</dt><dd><p>Supposed to run all the game logic that has to run for
+every frame generation, after processing the inputs</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Both of those methods need to be implemented in a class inheriting from <a class="reference internal" href="#not_rocketscience.framework.GameBase" title="not_rocketscience.framework.GameBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">GameBase</span></code></a>.
+The most important method is <a class="reference internal" href="#not_rocketscience.framework.GameBase.gameloop" title="not_rocketscience.framework.GameBase.gameloop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GameBase.gameloop()</span></code></a>, which runs the <code class="docutils literal notranslate"><span class="pre">pygame</span></code> gameloop,
+until the pygame window is closed. Whenever that happens or if a breaking error happens,
+everything gets properly tidied up.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyGame</span><span class="p">(</span><span class="n">GameBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">screen_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">screen_size</span><span class="p">,</span> <span class="n">vsync</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">caption</span><span class="o">=</span><span class="s2">&quot;my super duper game&quot;</span><span class="p">)</span>
+        <span class="c1"># whatever you ened to set up</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">process_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># key bindings for your game</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">keys</span><span class="p">[</span><span class="n">pygame</span><span class="o">.</span><span class="n">K_UP</span><span class="p">]:</span>
+            <span class="c1"># do something...</span>
+
+    <span class="k">def</span> <span class="nf">render_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># calculate everything necessary for the next frame:</span>
+        <span class="c1"># update positions, blit sprites, etc.</span>
+
+        <span class="c1"># GameBase provides the latest frametime in self.frametime_s, which can be used as</span>
+        <span class="c1"># a timestep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frametime_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>
+
+        <span class="c1"># screen surface is in self.screen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player</span><span class="o">.</span><span class="n">get_rect</span><span class="p">())</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">game</span> <span class="o">=</span> <span class="n">MyGame</span><span class="p">((</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">))</span>
+    <span class="n">game</span><span class="o">.</span><span class="n">gameloop</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">param screen_size<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of screen size in pixels (width, height)</p>
+</dd>
+<dt class="field-even">param fps<span class="colon">:</span></dt>
+<dd class="field-even"><p>target frames per second, only looked at if <code class="docutils literal notranslate"><span class="pre">vsync</span></code> is 0</p>
+</dd>
+<dt class="field-odd">param vsync<span class="colon">:</span></dt>
+<dd class="field-odd"><p>turn vertical synchronisation on or off (synchronizes frame rate with screen
+refresh rate)</p>
+</dd>
+<dt class="field-even">param caption<span class="colon">:</span></dt>
+<dd class="field-even"><p>name of the game window</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase.gameloop">
 <span class="sig-name descname"><span class="pre">gameloop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.framework.GameBase.gameloop" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Method running a while loop until an error happens or the pygame window is closed. In every iteration, the screen is cleared, inputs are processed, the new frame is generated and then displayed.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase.process_inputs">
 <span class="sig-name descname"><span class="pre">process_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.framework.GameBase.process_inputs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>key bindings for your game, what should happen when which key is pressed.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase.render_scene">
 <span class="sig-name descname"><span class="pre">render_scene</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.framework.GameBase.render_scene" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>calculate everything necessary for the next frame: update positions, blit sprites, etc.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase.screen_height">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">screen_height</span></span><a class="headerlink" href="#not_rocketscience.framework.GameBase.screen_height" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>convenience property returning screen height</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="not_rocketscience.framework.GameBase.screen_width">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">screen_width</span></span><a class="headerlink" href="#not_rocketscience.framework.GameBase.screen_width" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>convenience property returning screen width</p>
+</dd></dl>
 
+</section>
 </dd></dl>
 
 </section>
@@ -557,12 +631,14 @@ package folder</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="not_rocketscience.main.NotRocketScience.process_inputs">
 <span class="sig-name descname"><span class="pre">process_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.main.NotRocketScience.process_inputs" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>key bindings for your game, what should happen when which key is pressed.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="not_rocketscience.main.NotRocketScience.render_scene">
 <span class="sig-name descname"><span class="pre">render_scene</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#not_rocketscience.main.NotRocketScience.render_scene" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>calculate everything necessary for the next frame: update positions, blit sprites, etc.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="not_rocketscience.main.NotRocketScience.screen_coordinates">
