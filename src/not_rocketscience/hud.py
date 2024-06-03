@@ -4,7 +4,7 @@ from .config import config
 
 class FloatText:
 
-    def __init__(self, font="consolas", fontsize=15):
+    def __init__(self, font="PT Mono", fontsize=15):
         pygame.font.init()
         self.fs = fontsize
         self.font = pygame.font.SysFont(font, fontsize)
@@ -16,7 +16,7 @@ class FloatText:
 
 class PilotDisplay(FloatText):
 
-    def __init__(self, screen_position_top_right, font="consolas", fontsize=30) -> None:
+    def __init__(self, screen_position_top_right, font="PT Mono", fontsize=30) -> None:
         super().__init__(font=font, fontsize=fontsize)
         self.screen_position = screen_position_top_right
 
