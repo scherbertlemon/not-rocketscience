@@ -5,3 +5,4 @@ _venv
 .DS_Store
 .vscode
 docs/.doctrees
+.ipynb_checkpoints
