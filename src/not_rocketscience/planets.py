@@ -31,7 +31,7 @@ class PlanetGroup:
         return diffs, diffs_norms, planet_indices 
     
     def nearest_neighbour_distances(self, coordinate, max_dist):
-        diffs_norms, planet_indices = self.tree.query(coordinate, len(self.planets), distance_upper_bound=max_dist)
+        diffs_norms, planet_indices = self.tree.query(coordinate, 5, distance_upper_bound=max_dist)
         diffs_norms = diffs_norms[planet_indices < len(self.planets)]
         planet_indices = planet_indices[planet_indices < len(self.planets)]
 
