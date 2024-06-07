@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 from .config import config
 import logging
-from .math import deriv_combination, newton_gravity
+from .math import weird_gravity_force, weird_gravity_force_derivative, newton_gravity_force, newton_gravity_force_derivative, newton_iteration, canonical_weird_parameterset, canonical_newton_parameterset
 from scipy.spatial import KDTree
 
 
@@ -56,8 +56,13 @@ class BasePlanet:
         self.logger = logging.getLogger("BasePlanet")
         self.render_range = 200
         self.diameter = diameter
-        self.grav_force = deriv_combination(4, 6, 0.2, 4, 1.2)
-        self.scale = (self.diameter + 25) / 0.15
+
+        self.grav_force = weird_gravity_force(*canonical_weird_parameterset)
+        self.scale = self.diameter / newton_iteration(weird_gravity_force(*canonical_weird_parameterset), weird_gravity_force_derivative(*canonical_weird_parameterset), 0, 0.001)
+        
+        # self.grav_force = newton_gravity_force(*canonical_newton_parameterset)
+        # self.scale = 2 * self.diameter / newton_iteration(lambda r: newton_gravity_force(*canonical_newton_parameterset)(r) + 355, newton_gravity_force_derivative(*canonical_newton_parameterset), 0.03, 0.001)
+
         self.pos = position
         self.coordinates = position
 
