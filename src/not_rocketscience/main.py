@@ -74,7 +74,7 @@ class NotRocketScience(GameBase):
         )
 
         self.star_background.draw_tiles(self.screen, self.ship._screen_coordinates, self.frametime_s, self.speed)
-        [p.update_position_and_draw(self.screen, self.frametime_s, self.speed) for p in self.planets.planets]
+        self.planets.update_position_and_draw(self.screen, self.frametime_s, self.speed)
         
         self.ship.regenerate_fuel(
             self.frametime_s,

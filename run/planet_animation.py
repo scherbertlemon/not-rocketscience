@@ -8,10 +8,10 @@ from not_rocketscience import GameBase, config, PlanetTexture
 class PlanetAnimation(GameBase):
 
     def __init__(self):
-        super().__init__((500, 500), vsync=True)
+        super().__init__((600, 600), vsync=True)
         self.planet = PlanetTexture(
-            (250, 250),
-            diameter=200,
+            (300, 300),
+            diameter=300,
             rotation_speed=20,
             atmosphere_thickness=10,
             atmosphere_layers=5

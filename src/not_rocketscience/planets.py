@@ -1,26 +1,72 @@
-import pygame
-import numpy as np
-from .config import config
+"""
+Takes care of planet animation and gravity calculation for all planets as a group
+"""
+
 import logging
-from .math import weird_gravity_force, weird_gravity_force_derivative, newton_gravity_force, newton_gravity_force_derivative, newton_iteration, canonical_weird_parameterset, canonical_newton_parameterset
+import numpy as np
+import pygame
 from scipy.spatial import KDTree
+
+from .config import config
+from .math import (
+    weird_gravity_force,
+    weird_gravity_force_derivative,
+    newton_gravity_force,
+    newton_gravity_force_derivative,
+    newton_iteration,
+    canonical_weird_parameterset,
+    canonical_newton_parameterset
+)
 
 
 class PlanetGroup:
+    """
+    Manages all planets in the game, especially for efficient gravity calculation. Planets can be
+    instantiated with different Planet classes, which might have different appearance.
 
-    def __init__(self, planet_class, coordinates, diameter_min=20, diameter_max=180, planet_kwargs=None):
+    :param planet_class: class to instantiate indivudal planets. Can be :py:class:`PlanetSimple`
+        or :py:class:`PlanetTexture` at the moment.
+    :param coordinates: amount of planets x 2 ``numpy.array`` with planet coordinates in pixels.
+    :param diameter_min: diameters of planets are selected randomly. ``diameter_min`` is the
+        minimal planet diameter in pixels
+    :param diameter_max: diameters of planets are selected randomly. ``diameter_max`` is the
+        maximal planet diameter in pixels
+    :param planet_kwargs: additional keyword arguments for the ``planet_class`` constructor
+    """
+
+    def __init__(self, planet_class, coordinates,
+                 diameter_min=20, diameter_max=180,
+                 planet_kwargs=None):
         if planet_kwargs is None:
             planet_kwargs = dict()
-        
+
         self.planets = [
-            planet_class(pos, diameter=np.random.randint(diameter_min, diameter_max), **planet_kwargs)
-            for pos in coordinates
+            planet_class(
+                pos,
+                diameter=np.random.randint(diameter_min, diameter_max),
+                **planet_kwargs
+            ) for pos in coordinates
         ]
         self.tree = KDTree(coordinates)
 
     def nearest_neighbour_distances_slow(self, coordinate, max_dist):
+        """
+        Gives the distances to all planets relative to a given coordinatem that are smaller than
+        a given maximal distance. This method always calculates the distance for all planets and
+        is inefficient. It exists purely for demonstration purposes.
+
+        :param coordinate: 1 x 2 ``numpy.array`` representing the coordinate towards which
+            distances of planets should be calculated.
+        :param max_dist: if a planet distance is larger than ``max_dist`` in city_block metric,
+            the distance and planet will not be returned
+        :returns: tuple of (n x 2 ``numpy.array`` of connecting vectors,
+            n x 1 ``numpy.array`` of distances,
+            list of associated planet indices referring to ``self.planets``)
+        """
         planet_indices = [
-            index for index, p in enumerate(self.planets) if np.abs(p.coordinates - coordinate).sum() < max_dist
+            index
+            for index, p in enumerate(self.planets)
+            if np.abs(p.coordinates - coordinate).sum() < max_dist
         ]
 
         if len(planet_indices):
@@ -28,9 +74,22 @@ class PlanetGroup:
             diffs_norms = np.sqrt(np.sum(diffs**2, axis=1))
         else:
             diffs, diffs_norms = np.array([]), np.array([])
-        return diffs, diffs_norms, planet_indices 
-    
+
+        return diffs, diffs_norms, planet_indices
+
     def nearest_neighbour_distances(self, coordinate, max_dist):
+        """
+        Gives the distances to maximal 5 planets relative to a given coordinatem that are smaller
+        than a given maximal distance. Uses a KDTree to speed query those distances quickly
+
+        :param coordinate: 1 x 2 ``numpy.array`` representing the coordinate towards which
+            distances of planets should be calculated.
+        :param max_dist: if a planet distance is larger than ``max_dist`` in city_block metric,
+            the distance and planet will not be returned
+        :returns: tuple of (n x 2 ``numpy.array`` of connecting vectors,
+            n x 1 ``numpy.array`` of distances,
+            list of associated planet indices referring to ``self.planets``)
+        """
         diffs_norms, planet_indices = self.tree.query(coordinate, 5, distance_upper_bound=max_dist)
         diffs_norms = diffs_norms[planet_indices < len(self.planets)]
         planet_indices = planet_indices[planet_indices < len(self.planets)]
@@ -39,9 +98,20 @@ class PlanetGroup:
             diffs = np.vstack([self.planets[i].coordinates for i in planet_indices]) - coordinate
         else:
             diffs, diffs_norms = np.array([]), np.array([])
-        return diffs, diffs_norms, planet_indices 
-    
+
+        return diffs, diffs_norms, planet_indices
+
     def calc_gravity_contrib(self, coordinate, max_dist):
+        """
+        Calculates the accumulated gravity force vector from nearest planets that act at
+        ``coordinate``.
+
+        :param coordinate: 1 x 2 ``numpy.array`` representing the coordinate towards which
+            distances of planets should be calculated.
+        :param max_dist: if a planet distance is larger than ``max_dist`` in city_block metric,
+            the distance and planet will not be returned
+        :returns tuple of (1 x 2 gravity force vector, lis of contributing planet indices)
+        """
         diffs, dists, planet_indices = self.nearest_neighbour_distances(coordinate, max_dist)
         gravity_contrib = [
             self.planets[index].calc_gravity(diff, diff_norm)
@@ -49,6 +119,13 @@ class PlanetGroup:
         ]
         gravity_contrib += [np.zeros(2)]  # in case empty
         return np.vstack(gravity_contrib).sum(axis=0), [self.planets[i] for i in planet_indices]
+
+    def update_position_and_draw(self, screen, dt, speed):
+        """
+        Just a buld update method that calls the method of the same name for all planets.
+        """
+        for planet in self.planets:
+            planet.update_position_and_draw(screen, dt, speed)
 
 
 class BasePlanet:
