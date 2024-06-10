@@ -70,7 +70,7 @@ class NotRocketScience(GameBase):
         )
 
         self.speed = self.speed + self.frametime_s * (
-            self.ship.calc_acceleration() - grav_accel - self.speed * self.ship.ship_movement_damping
+            self.ship.calc_acceleration() + grav_accel - self.speed * self.ship.ship_movement_damping
         )
 
         self.star_background.draw_tiles(self.screen, self.ship._screen_coordinates, self.frametime_s, self.speed)

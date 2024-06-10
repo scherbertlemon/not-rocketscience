@@ -70,7 +70,7 @@ class PlanetGroup:
         ]
 
         if len(planet_indices):
-            diffs = np.vstack([self.planets[i].coordinates for i in planet_indices]) - coordinate
+            diffs = coordinate - np.vstack([self.planets[i].coordinates for i in planet_indices])
             diffs_norms = np.sqrt(np.sum(diffs**2, axis=1))
         else:
             diffs, diffs_norms = np.array([]), np.array([])
@@ -95,7 +95,7 @@ class PlanetGroup:
         planet_indices = planet_indices[planet_indices < len(self.planets)]
 
         if len(planet_indices):
-            diffs = np.vstack([self.planets[i].coordinates for i in planet_indices]) - coordinate
+            diffs = coordinate - np.vstack([self.planets[i].coordinates for i in planet_indices])
         else:
             diffs, diffs_norms = np.array([]), np.array([])
 
