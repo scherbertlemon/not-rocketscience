@@ -81,11 +81,11 @@ class Ship:
     def apply_rotation(self, dt):
         self._angle += dt * self._rotation_speed
 
-    def calc_acceleration(self):
+    def calc_acceleration(self, speed):
         """
         Result of rotation matrix with `self.angle_rad` and thrust vector
         """
-        return np.array([-np.sin(self.angle_rad) * self._thrust, -np.cos(self.angle_rad) * self.thrust])
+        return np.array([-np.sin(self.angle_rad) * self._thrust, -np.cos(self.angle_rad) * self.thrust]) - self.ship_movement_damping * speed
 
     def move(self, offset):
         self._world_coordinates += offset
@@ -109,6 +109,10 @@ class Ship:
     @property
     def world_coordinates(self):
         return self._world_coordinates
+    
+    @property
+    def screen_coordinates(self):
+        return self._screen_coordinates
 
     def draw(self, screen, dt, speed):
         self.consume_fuel(dt)

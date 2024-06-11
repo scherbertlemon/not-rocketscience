@@ -66,11 +66,11 @@ class PlanetGroup:
         planet_indices = [
             index
             for index, p in enumerate(self.planets)
-            if np.abs(p.coordinates - coordinate).sum() < max_dist
+            if np.abs(p.world_coordinates - coordinate).sum() < max_dist
         ]
 
         if len(planet_indices):
-            diffs = coordinate - np.vstack([self.planets[i].coordinates for i in planet_indices])
+            diffs = coordinate - np.vstack([self.planets[i].world_coordinates for i in planet_indices])
             diffs_norms = np.sqrt(np.sum(diffs**2, axis=1))
         else:
             diffs, diffs_norms = np.array([]), np.array([])
@@ -95,7 +95,7 @@ class PlanetGroup:
         planet_indices = planet_indices[planet_indices < len(self.planets)]
 
         if len(planet_indices):
-            diffs = coordinate - np.vstack([self.planets[i].coordinates for i in planet_indices])
+            diffs = coordinate - np.vstack([self.planets[i].world_coordinates for i in planet_indices])
         else:
             diffs, diffs_norms = np.array([]), np.array([])
 
@@ -140,8 +140,8 @@ class BasePlanet:
         # self.grav_force = newton_gravity_force(*canonical_newton_parameterset)
         # self.scale = 2 * self.diameter / newton_iteration(lambda r: newton_gravity_force(*canonical_newton_parameterset)(r) + 355, newton_gravity_force_derivative(*canonical_newton_parameterset), 0.03, 0.001)
 
-        self.pos = position
-        self.coordinates = position
+        self.screen_coordinates = position
+        self.world_coordinates = position
 
     @property
     def surface(self):
@@ -151,11 +151,11 @@ class BasePlanet:
         return self.grav_force(dist / self.scale) * diff / dist
     
     def update_position_and_draw(self, screen, dt, speed):
-        self.pos = self.pos - dt * speed
-        if self.pos[0] > -self.render_range and self.pos[1] < screen.get_width() + self.render_range \
-            and self.pos[1] > -self.render_range and self.pos[1] < screen.get_height() + self.render_range:
+        self.screen_coordinates = self.screen_coordinates - dt * speed
+        if self.screen_coordinates[0] > -self.render_range and self.screen_coordinates[1] < screen.get_width() + self.render_range \
+            and self.screen_coordinates[1] > -self.render_range and self.screen_coordinates[1] < screen.get_height() + self.render_range:
             surf = self.surface
-            screen.blit(surf, surf.get_rect(center=tuple(self.pos)))
+            screen.blit(surf, surf.get_rect(center=tuple(self.screen_coordinates)))
 
 
 class PlanetSimple(BasePlanet):
@@ -167,7 +167,7 @@ class PlanetSimple(BasePlanet):
         self._surface.fill((0, 0, 0, 0))
         pygame.draw.ellipse(self._surface, self.color + (100,), (0, 0, self.diameter, self.diameter))
         pygame.draw.ellipse(self._surface, self.color + (255,), (0.1 * self.diameter, 0.1 * self.diameter, self.diameter * 0.8, self.diameter * 0.8))
-        self.logger.info(f"Created Planet at {tuple(self.pos)} with color {config.rgb_to_hex(self.color)}")
+        self.logger.info(f"Created Planet at {tuple(self.screen_coordinates)} with color {config.rgb_to_hex(self.color)}")
     
     @property
     def surface(self):

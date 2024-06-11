@@ -19,7 +19,7 @@ def ln(b1, s1):
 
 def weird_gravity_potential(A, b1, s1, b2, s2):
     def f(r):
-        return A * ln(b1, s1)(r) * exp2(b2, s2)(r)
+        return -A * ln(b1, s1)(r) * exp2(b2, s2)(r)
     return f
 
 
@@ -37,7 +37,7 @@ def weird_gravity_force_derivative(A, b1, s1, b2, s2):
 
 def newton_gravity_potential(G, cutoff):
     def f(r):
-        return G / np.where(r >= cutoff, r, cutoff)
+        return -G / np.where(r >= cutoff, r, cutoff)
     return f
 
 

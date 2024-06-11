@@ -70,10 +70,10 @@ class NotRocketScience(GameBase):
         )
 
         self.speed = self.speed + self.frametime_s * (
-            self.ship.calc_acceleration() + grav_accel - self.speed * self.ship.ship_movement_damping
+            self.ship.calc_acceleration(self.speed) + grav_accel
         )
 
-        self.star_background.draw_tiles(self.screen, self.ship._screen_coordinates, self.frametime_s, self.speed)
+        self.star_background.draw_tiles(self.screen, self.ship.screen_coordinates, self.frametime_s, self.speed)
         self.planets.update_position_and_draw(self.screen, self.frametime_s, self.speed)
         
         self.ship.regenerate_fuel(
@@ -115,7 +115,7 @@ class NotRocketScience(GameBase):
             
             if switch_ship:
                 self.ship = Ship(
-                    self.ship._screen_coordinates,
+                    self.ship.screen_coordinates,
                     self.ship.world_coordinates,
                     initial_angle=self.ship._angle,
                     **config.pilots[self.pilot_index % self.n_pilots]

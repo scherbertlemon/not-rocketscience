@@ -15,12 +15,12 @@ class GravityDemo(GameBase):
 
     def render_scene(self):
         self.screen.fill(config.colors.space)
-        d2 = self.p2.pos - self.p1.pos
+        d2 = self.p2.screen_coordinates - self.p1.screen_coordinates
         
         force_on_p2 = self.m1 * self.p1.calc_gravity(d2, np.sqrt(np.sum(d2**2)))
         self.s2 = self.s2 - self.frametime_s * force_on_p2
 
-        d1 = self.p1.pos - self.p2.pos
+        d1 = self.p1.screen_coordinates - self.p2.screen_coordinates
         force_on_p1 = self.m2 * self.p2.calc_gravity(d1, np.sqrt(np.sum(d1**2)))
 
         self.s1 = self.s1 - self.frametime_s * force_on_p1
@@ -28,9 +28,9 @@ class GravityDemo(GameBase):
         self.p1.update_position_and_draw(self.screen, self.frametime_s, self.s1)
         self.p2.update_position_and_draw(self.screen, self.frametime_s, self.s2)
 
-        self.mid = (self.m1 * self.p1.pos + self.m2 * self.p2.pos) / (self.m1 + self.m2)
-        self.p1.pos = self.p1.pos - self.mid + 0.5 * np.array(self.screen_size)
-        self.p2.pos = self.p2.pos - self.mid + 0.5 * np.array(self.screen_size)
+        self.mid = (self.m1 * self.p1.screen_coordinates + self.m2 * self.p2.screen_coordinates) / (self.m1 + self.m2)
+        self.p1.screen_coordinates = self.p1.screen_coordinates - self.mid + 0.5 * np.array(self.screen_size)
+        self.p2.screen_coordinates = self.p2.screen_coordinates - self.mid + 0.5 * np.array(self.screen_size)
 
     def process_inputs(self):
         pass
