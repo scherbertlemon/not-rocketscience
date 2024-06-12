@@ -42,3 +42,5 @@ That's about all you can do :-D
 ## License
 
 The code is released under the MIT License [(see LICENSE)](./LICENSE). All artwork distributed with the code is originally created by me and falls under the same conditions.
+
+All artwork included in this repository originally by Andreas Roth.
