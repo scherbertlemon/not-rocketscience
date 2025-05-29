@@ -1,0 +1,33 @@
+[project]
+name = "not-rocketscience"
+version = "0.3.0"
+description = "A spaceship-flying game based on pygame"
+authors = [
+    {name = "Andreas Roth", email = "kommentare@s-lemon.de"}
+]
+requires-python =  ">=3.11.0,<4.0.0"
+dependencies = [
+    "pygame (>=2.5.2,<3.0.0)", 
+    "numpy (>=1.26.4,<3.0.0)",
+    "pyyaml (>=6.0.1,<7.0.0)",
+    "scipy (>=1.13.0,<2.0.0)"
+]
+readme = "README.md"
+
+[project.scripts]
+not-rocketscience = "not_rocketscience.main:cli"
+
+[project.optional-dependencies]
+pres = ["jupyterlab (>=4.1.2,<5.0.0)", "plotly (>=5.19.0,<6.0.0)", "jupyterlab-rise (>=0.43.1,<0.50.0)"]
+docs = ["sphinx (>=7.0.0,<9.0.0)", "sphinx-rtd-theme"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["not_rocketscience"]
+
+[tool.setuptools.package-data]
+not_rocketscience = ["*.png", "*.yaml"]
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
