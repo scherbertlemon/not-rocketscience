@@ -29,5 +29,5 @@ include = ["not_rocketscience"]
 not_rocketscience = ["*.png", "*.yaml"]
 
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
