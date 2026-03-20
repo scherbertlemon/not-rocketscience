@@ -1,5 +1,5 @@
 from not_rocketscience import PlanetTexture, GameBase, config
-from not_rocketscience.math import newton_gravity_force, canonical_newton_parameterset
+from not_rocketscience.mathematics import newton_gravity_force, canonical_newton_parameterset
 import numpy as np
 
 
