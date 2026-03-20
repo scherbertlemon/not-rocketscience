@@ -1,43 +1,43 @@
 ![logo](src/not_rocketscience/assets/logo.png)
 
-# This game is Not Rocketscience!
+# This game is Not Rocketscience! 🚀
 
-This started out as a [pygame](https://github.com/pygame/pygame) playground and turns into a 2D spaceship-flying game.
+This started out as a [pygame-ce](https://github.com/pygame-community/pygame-ce) playground and turned into a 2D spaceship-flying game. There is really not much more you can do 😄
 
-## Setup
+## ⚙️ Setup
 
-The standard setup relies on [conda](https://docs.anaconda.com/free/miniconda/index.html) being present. Simply run ``setup.sh``: 
+A python installation with Python 3.11 or higher is required, a virtual environment to run the game or to develop in can be created following the instructions below:
 
-* creates a named conda environment ``not-rocketscience``
-* installs dependencies from ``requirements.txt`` into it
-* does a editable install of the package ``src/not_rocketscience``, so it can be imported in the ``not-rocketscience`` environment
-
-You can also do those steps manually:
-
-```bash
-conda create -n not-rocketscience --file requirements.txt -c conda-forge -y
-conda run -n not-rocketscience pip install -e .
-```
-
-## Running the game
-
-```bash
-conda run -n not-rocketscience not-rocketscience
-```
-
-or 
-
-```bash
-conda activate not-rocketscience
-not-rocketscience
-```
+1. Create a virtual Python environment in the root folder of this repo
+    ```shell
+    python -m venv .venv
+    ```
+2. Activate the environment
+    ```shell
+    # Windows
+    .venv/Scripts/activate.bat
+    # Mac / Linux
+    source .venv/bin/activate
+3. install dependencies from ``pyproject.toml``:
+    ```shell
+    pip install -e .
+    ````
+4. Run any of the scripts in ``run`` or run the game itself with the command ``not-rocketscience`` from any terminal where the environment is activated.
 
 ## Controls
 
 * Apply constant thrust by pressing and holding the ``X`` key
 * Change orientation of spaceship with the left and right arrow keys
 
-That's about all you can do :-D
+## Installing dev dependencies for creating documentation / running jupyter
+
+Run from a terminal with activated environment
+
+```shell
+pip install -e ".[pres,docs]"
+```
+
+The presentation in ``run/presentation.ipynb`` is currently broken!
 
 ## License
 
