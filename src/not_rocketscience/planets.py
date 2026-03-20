@@ -8,7 +8,7 @@ import pygame
 from scipy.spatial import KDTree
 
 from .config import config
-from .math import (
+from .mathematics import (
     weird_gravity_force,
     weird_gravity_force_derivative,
     newton_gravity_force,
